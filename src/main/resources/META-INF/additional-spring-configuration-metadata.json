@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "number.threads",
+      "type": "java.lang.String",
+      "description": "Description for number.threads."
+    },
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "description": "Description for file.upload-dir."
+    },
+    {
+      "name": "app.jwtExpiration",
+      "type": "java.lang.String",
+      "description": "Description for app.jwtExpiration."
+    },
+    {
+      "name": "app.jwtSecret",
+      "type": "java.lang.String",
+      "description": "Description for app.jwtSecret."
+    }
+  ]
+}
