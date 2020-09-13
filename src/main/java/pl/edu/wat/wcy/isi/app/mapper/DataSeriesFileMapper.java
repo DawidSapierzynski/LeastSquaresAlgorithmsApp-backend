@@ -25,13 +25,9 @@ public class DataSeriesFileMapper {
                 .dateSent(dataSeriesFile.getDateSent())
                 .deleted(dataSeriesFile.getDeleted().equals((byte) 1))
                 .size(dataSeriesFile.getSize())
-                .errorPolynomial(dataSeriesFile.getErrorPolynomial())
-                .errorTrigonometric(dataSeriesFile.getErrorTrigonometric())
-                .periodicity(dataSeriesFile.getPeriodicity().equals((byte) 1))
                 .variance(dataSeriesFile.getVariance())
                 .standardDeviation(dataSeriesFile.getStandardDeviation())
                 .points(dataSeriesFile.getPoints())
-                .artefacts(dataSeriesFile.getArtefacts())
                 .build();
     }
 }

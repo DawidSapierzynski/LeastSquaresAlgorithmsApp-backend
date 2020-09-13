@@ -28,9 +28,7 @@ public class ReadSeriesDatesFromFile extends ReadSeriesDates {
     @Override
     public void run() {
         List<PointXY> points = getPoints(this.seriesDatesPath);
-        List<PointXY> artefacts = getArtefact(points, logger);
 
-        this.dataSeriesFile.setArtefacts(artefacts);
         this.dataSeriesFile.setPoints(points);
         this.dataSeriesFile.setSize(points.size());
 

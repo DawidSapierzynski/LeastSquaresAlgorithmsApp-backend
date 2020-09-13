@@ -19,14 +19,10 @@ public class DataSeriesFileEntity {
     private Byte deleted = (byte) 0;
     private UserEntity user;
     private Integer size;
-    private Double errorPolynomial;
-    private Double errorTrigonometric;
-    private Byte periodicity;
     private Double variance;
     private Double standardDeviation;
     private Collection<ApproximationPropertiesEntity> approximationProperties = new HashSet<>();
     private List<PointXY> points;
-    private List<PointXY> artefacts;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,36 +83,6 @@ public class DataSeriesFileEntity {
 
     public void setSize(Integer size) {
         this.size = size;
-    }
-
-    @Basic
-    @Column(name = "error_polynomial")
-    public Double getErrorPolynomial() {
-        return errorPolynomial;
-    }
-
-    public void setErrorPolynomial(Double errorPolynomial) {
-        this.errorPolynomial = errorPolynomial;
-    }
-
-    @Basic
-    @Column(name = "error_trigonometric")
-    public Double getErrorTrigonometric() {
-        return errorTrigonometric;
-    }
-
-    public void setErrorTrigonometric(Double errorTrigonometric) {
-        this.errorTrigonometric = errorTrigonometric;
-    }
-
-    @Basic
-    @Column(name = "periodicity")
-    public Byte getPeriodicity() {
-        return periodicity;
-    }
-
-    public void setPeriodicity(Byte periodicity) {
-        this.periodicity = periodicity;
     }
 
     @Basic
@@ -182,14 +148,5 @@ public class DataSeriesFileEntity {
 
     public synchronized void setPoints(List<PointXY> points) {
         this.points = points;
-    }
-
-    @Transient
-    public synchronized List<PointXY> getArtefacts() {
-        return artefacts;
-    }
-
-    public synchronized void setArtefacts(List<PointXY> artefacts) {
-        this.artefacts = artefacts;
     }
 }

@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.wcy.isi.app.configuration.FileStorageProperties;
 import pl.edu.wat.wcy.isi.app.configuration.exception.SizeException;
-import pl.edu.wat.wcy.isi.app.core.calculate.*;
+import pl.edu.wat.wcy.isi.app.core.calculate.ReadSeriesDates;
+import pl.edu.wat.wcy.isi.app.core.calculate.ReadSeriesDatesFromFile;
+import pl.edu.wat.wcy.isi.app.core.calculate.ReadSeriesDatesFromMultipartFile;
+import pl.edu.wat.wcy.isi.app.core.calculate.VarianceCalculate;
 import pl.edu.wat.wcy.isi.app.model.entityModels.DataSeriesFileEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.DataSeriesFileRepository;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +47,7 @@ public class DataSeriesFileService {
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
             logger.debug("ReadSeriesDatesFromFile - isDone: {}", futures.get(0).isDone());
-            if (dataSeriesFileEntity.getPoints().size() + dataSeriesFileEntity.getArtefacts().size() < MIN_NUMBER_POINTS) {
+            if (dataSeriesFileEntity.getPoints().size() < MIN_NUMBER_POINTS) {
                 throw new SizeException("Data series is empty or the file has been deleted.");
             }
         } catch (InterruptedException e) {
@@ -76,18 +78,10 @@ public class DataSeriesFileService {
 
     public void propertiesCalculate(DataSeriesFileEntity dataSeriesFile) throws SizeException {
         checkSize(dataSeriesFile.getSize());
-
-        List<Callable<Object>> callables = Arrays.asList(Executors.callable(new VarianceCalculate(dataSeriesFile)),
-                Executors.callable(new PeriodicityPolynomialCalculate(dataSeriesFile))
-        );
+        List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new VarianceCalculate(dataSeriesFile)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
             logger.debug("VarianceCalculate - isDone: {}", futures.get(0).isDone());
-            logger.debug("PeriodicityPolynomialCalculate - isDone: {}", futures.get(1).isDone());
-            logger.debug("PeriodicityTrigonometricCalculate - isDone: {}", futures.get(2).isDone());
-
-            dataSeriesFile.setPeriodicity(dataSeriesFile.getErrorTrigonometric() < dataSeriesFile.getErrorPolynomial() ? (byte) 1 : (byte) 0);
-            logger.info("Set periodicity: {}", dataSeriesFile.getPeriodicity());
         } catch (InterruptedException e) {
             logger.error("{}", e.getMessage());
         }

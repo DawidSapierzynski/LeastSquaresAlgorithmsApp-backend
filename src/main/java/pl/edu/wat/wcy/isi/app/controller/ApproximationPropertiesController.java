@@ -56,7 +56,7 @@ public class ApproximationPropertiesController {
         approximationProperties.setDataSeriesFile(dataSeriesFileEntity);
         approximationProperties.setDeleted((byte) 0);
         approximationProperties.setUser(userEntity);
-        approximationProperties.setPrecisionApproximation(degree);
+        approximationProperties.setDegreeApproximation(degree);
         approximationProperties.setDateCreate(new Timestamp(System.currentTimeMillis()));
 
         approximationProperties = approximationPropertiesService.save(approximationProperties);

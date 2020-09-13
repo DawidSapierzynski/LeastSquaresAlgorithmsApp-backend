@@ -18,12 +18,8 @@ public class DataSeriesFileDTO {
     private String hashName;
     private Timestamp dateSent;
     private int size;
-    private double errorPolynomial;
-    private double errorTrigonometric;
-    private boolean periodicity;
     private double variance;
     private double standardDeviation;
     private boolean deleted;
     private List<PointXY> points;
-    private List<PointXY> artefacts;
 }

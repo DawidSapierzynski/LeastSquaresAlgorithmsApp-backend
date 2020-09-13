@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "approximation_properties", schema = "aaa")
 public class ApproximationPropertiesEntity {
     private Long approximationPropertiesId;
-    private Integer precisionApproximation;
+    private Integer degreeApproximation;
     private Timestamp dateCreate;
     private Byte deleted = (byte) 0;
     private DataSeriesFileEntity dataSeriesFile;
@@ -27,13 +27,13 @@ public class ApproximationPropertiesEntity {
 
 
     @Basic
-    @Column(name = "precision_approximation")
-    public Integer getPrecisionApproximation() {
-        return precisionApproximation;
+    @Column(name = "degree_approximation")
+    public Integer getDegreeApproximation() {
+        return degreeApproximation;
     }
 
-    public void setPrecisionApproximation(Integer precisionApproximation) {
-        this.precisionApproximation = precisionApproximation;
+    public void setDegreeApproximation(Integer precisionApproximation) {
+        this.degreeApproximation = precisionApproximation;
     }
 
     @Basic
@@ -63,7 +63,7 @@ public class ApproximationPropertiesEntity {
         if (o == null || getClass() != o.getClass()) return false;
         ApproximationPropertiesEntity that = (ApproximationPropertiesEntity) o;
         return Objects.equals(approximationPropertiesId, that.approximationPropertiesId) &&
-                Objects.equals(precisionApproximation, that.precisionApproximation) &&
+                Objects.equals(degreeApproximation, that.degreeApproximation) &&
                 Objects.equals(dateCreate, that.dateCreate) &&
                 Objects.equals(deleted, that.deleted) &&
                 Objects.equals(dataSeriesFile, that.dataSeriesFile) &&
@@ -72,7 +72,7 @@ public class ApproximationPropertiesEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(approximationPropertiesId, precisionApproximation, dateCreate, deleted, dataSeriesFile, user);
+        return Objects.hash(approximationPropertiesId, degreeApproximation, dateCreate, deleted, dataSeriesFile, user);
     }
 
     @ManyToOne

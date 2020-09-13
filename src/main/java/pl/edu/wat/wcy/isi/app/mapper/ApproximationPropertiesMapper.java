@@ -27,7 +27,7 @@ public class ApproximationPropertiesMapper {
                 .id(approximationProperties.getApproximationPropertiesId())
                 .userId(approximationProperties.getUser().getUserId())
                 .dataSeriesFileId(approximationProperties.getDataSeriesFile().getDataSeriesFileId())
-                .degree(approximationProperties.getPrecisionApproximation())
+                .degree(approximationProperties.getDegreeApproximation())
                 .dateCreate(approximationProperties.getDateCreate())
                 .deleted(approximationProperties.getDeleted().equals((byte) 1))
                 .dataSeriesFileDTO(dataSeriesFileMapper.buildDataSeriesFileDTO(approximationProperties.getDataSeriesFile()))
