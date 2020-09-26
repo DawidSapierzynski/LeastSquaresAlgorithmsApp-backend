@@ -67,11 +67,11 @@ public class UserService {
         return save(user);
     }
 
-    public boolean findByEmailAndLoginNot(String email, String login){
+    public boolean findByEmailAndLoginNot(String email, String login) {
         return this.userRepository.findByEmailAndLoginNot(email, login).isPresent();
     }
 
-    public Optional<UserEntity> findByUserIdAndDeleted(long userId, byte deleted){
+    public Optional<UserEntity> findByUserIdAndDeleted(long userId, byte deleted) {
         return this.userRepository.findByUserIdAndDeleted(userId, deleted);
     }
 }

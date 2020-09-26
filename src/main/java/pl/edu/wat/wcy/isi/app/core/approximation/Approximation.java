@@ -1,5 +1,6 @@
 package pl.edu.wat.wcy.isi.app.core.approximation;
 
+import pl.edu.wat.wcy.isi.app.core.LeastSquaresMethod;
 import pl.edu.wat.wcy.isi.app.core.function.MathematicalFunction;
 import pl.edu.wat.wcy.isi.app.core.function.polynomials.Polynomial;
 import pl.edu.wat.wcy.isi.app.model.PointXY;
@@ -20,13 +21,7 @@ public abstract class Approximation {
         this.degree = degree;
     }
 
-    public Approximation(List<PointXY> points) {
-        this.points = points;
-        this.size = points.size();
-        this.degree = points.size() - 1;
-    }
-
-    public abstract List<MathematicalFunction> doApproximations();
+    public abstract List<MathematicalFunction> doApproximations(LeastSquaresMethod leastSquaresMethod);
 
     public List<PointXY> getApproximationsPoints(int approximationsPointsSize) {
         List<PointXY> approximationsPoints = new ArrayList<>();
@@ -42,9 +37,9 @@ public abstract class Approximation {
         return approximationsPoints;
     }
 
-    public double calculateError() {
+    public double calculateError(LeastSquaresMethod leastSquaresMethod) {
         if (getPolynomial() == null) {
-            doApproximations();
+            doApproximations(leastSquaresMethod);
         }
 
         this.absoluteError = getPoints().stream()

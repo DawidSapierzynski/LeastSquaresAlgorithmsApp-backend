@@ -5,10 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.wat.wcy.isi.app.core.LeastSquaresMethod;
 import pl.edu.wat.wcy.isi.app.core.approximation.PolynomialApproximation;
-import pl.edu.wat.wcy.isi.app.model.PointXY;
 import pl.edu.wat.wcy.isi.app.core.function.polynomials.AlgebraicPolynomial;
 import pl.edu.wat.wcy.isi.app.core.function.polynomials.Polynomial;
+import pl.edu.wat.wcy.isi.app.model.PointXY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ class PolynomialApproximationTest {
         Polynomial resultPolynomial;
         double r, cr;
 
-        resultPolynomial = polynomialApproximation.doApproximations().get(0).getPolynomial();
+        resultPolynomial = polynomialApproximation.doApproximations(LeastSquaresMethod.STANDARDIZATION).get(0).getPolynomial();
 
         logger.info("{}", function);
         logger.info("{}", resultPolynomial);

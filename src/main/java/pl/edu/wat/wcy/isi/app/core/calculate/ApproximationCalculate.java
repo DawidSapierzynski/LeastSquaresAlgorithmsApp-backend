@@ -26,16 +26,10 @@ public class ApproximationCalculate implements Runnable {
 
     @Override
     public void run() {
-        Approximation approximation;
         int degree = chosenMethodDTO.getDegree();
+        Approximation approximation = new PolynomialApproximation(points, degree);
 
-        switch (chosenMethodDTO.getLeastSquaresMethod()) {
-            default: {
-                approximation = new PolynomialApproximation(points, degree);
-            }
-        }
-
-        approximationDTO.setMathematicalFunctionDTOs(mathematicalFunctionMapper.mapToMathematicalFunctionDTOs(approximation.doApproximations()));
+        approximationDTO.setMathematicalFunctionDTOs(mathematicalFunctionMapper.mapToMathematicalFunctionDTOs(approximation.doApproximations(chosenMethodDTO.getLeastSquaresMethod())));
         approximationDTO.setPoints(approximation.getApproximationsPoints(NUMBER_SAMPLES * points.size()));
         approximationDTO.setAbsoluteError(approximation.getAbsoluteError());
     }

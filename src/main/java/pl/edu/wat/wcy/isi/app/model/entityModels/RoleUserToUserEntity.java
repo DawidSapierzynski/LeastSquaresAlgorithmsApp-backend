@@ -11,7 +11,7 @@ public class RoleUserToUserEntity {
     private RoleUserEntity roleUserByRoleUserId;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_user_to_user_id")
     public long getRoleUserToUserId() {
         return roleUserToUserId;

@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface RoleUserToUserRepository extends JpaRepository<RoleUserToUserEntity, Long> {
     List<RoleUserToUserEntity> findByUserByUserId(UserEntity userEntity);
+
     void deleteByUserByUserId(UserEntity userEntity);
 }

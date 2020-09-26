@@ -40,7 +40,7 @@ public class UserMapper {
         return userEntity;
     }
 
-    public void updateUserEntity(UserEntity user, UserDTO userDTO){
+    public void updateUserEntity(UserEntity user, UserDTO userDTO) {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
