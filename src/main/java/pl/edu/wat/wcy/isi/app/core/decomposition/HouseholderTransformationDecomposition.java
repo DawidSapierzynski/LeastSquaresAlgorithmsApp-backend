@@ -8,7 +8,12 @@ public class HouseholderTransformationDecomposition extends Decomposition {
     }
 
     @Override
-    public Matrix solve(Matrix matrixY) {
+    protected void decompose() {
+
+    }
+
+    @Override
+    protected Matrix solveUsingLeastSquares(Matrix matrixY) {
         return matrixX.qr().solve(matrixY);
     }
 }

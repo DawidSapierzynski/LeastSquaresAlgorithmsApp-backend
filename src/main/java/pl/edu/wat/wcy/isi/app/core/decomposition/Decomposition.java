@@ -9,5 +9,12 @@ public abstract class Decomposition {
         this.matrixX = matrixX;
     }
 
-    public abstract Matrix solve(Matrix matrixY);
+    protected abstract void decompose();
+
+    protected abstract Matrix solveUsingLeastSquares(Matrix matrixY);
+
+    public Matrix solve(Matrix matrixY) {
+        decompose();
+        return solveUsingLeastSquares(matrixY);
+    }
 }

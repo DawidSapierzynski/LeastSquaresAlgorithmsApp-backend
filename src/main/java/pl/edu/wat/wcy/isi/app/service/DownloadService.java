@@ -69,7 +69,7 @@ public class DownloadService {
         List<PointXY> points = new ArrayList<>();
         BigDecimal x = BigDecimal.valueOf(domainFunction.getBeginningInterval());
 
-        BigDecimal step = BigDecimal.valueOf(domainFunction.getEndInterval() - domainFunction.getBeginningInterval()).setScale(16, RoundingMode.HALF_UP)
+        BigDecimal step = BigDecimal.valueOf(domainFunction.getEndInterval() - domainFunction.getBeginningInterval()).setScale(20, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf((double) numberPoints - 1), RoundingMode.HALF_UP);
 
         if (step.doubleValue() <= 0.0) {

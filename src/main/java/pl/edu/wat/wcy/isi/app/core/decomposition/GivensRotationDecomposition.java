@@ -8,7 +8,12 @@ public class GivensRotationDecomposition extends Decomposition {
     }
 
     @Override
-    public Matrix solve(Matrix matrixY) {
+    protected void decompose() {
+
+    }
+
+    @Override
+    protected Matrix solveUsingLeastSquares(Matrix matrixY) {
         return new Matrix(this.matrixX.getColumnDimension(), 1, 1);
     }
 }

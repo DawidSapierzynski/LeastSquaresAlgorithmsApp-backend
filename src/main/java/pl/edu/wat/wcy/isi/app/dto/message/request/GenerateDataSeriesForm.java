@@ -6,12 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.edu.wat.wcy.isi.app.dto.MathematicalFunctionDTO;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenerateDataSeriesForm {
-    private MathematicalFunctionDTO mathematicalFunctionDTO;
+    @Max(value = 10000, message = "Number of points must be no more than 10000")
+    @Min(value = 5, message = "Number of points mustn't be less than 5")
     private int numberPoints;
+    private MathematicalFunctionDTO mathematicalFunctionDTO;
     private boolean trigonometricPolynomial;
 }

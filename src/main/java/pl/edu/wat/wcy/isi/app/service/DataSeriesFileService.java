@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
 @Service
 public class DataSeriesFileService {
     public static final String FILE_EXTENSION = ".csv";
-    private static final int MAX_NUMBER_POINTS = 1000;
+    private static final int MAX_NUMBER_POINTS = 10000;
     private static final int MIN_NUMBER_POINTS = 5;
     private static final Logger logger = LoggerFactory.getLogger(DataSeriesFileService.class);
 
