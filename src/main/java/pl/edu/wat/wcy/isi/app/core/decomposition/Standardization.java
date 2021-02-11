@@ -2,10 +2,10 @@ package pl.edu.wat.wcy.isi.app.core.decomposition;
 
 import Jama.Matrix;
 
-public class StandardizationDecomposition extends Decomposition {
+public class Standardization extends Decomposition {
     private Matrix standardizationMatrix;
 
-    public StandardizationDecomposition(Matrix matrixX) {
+    public Standardization(Matrix matrixX) {
         super(matrixX);
     }
 
