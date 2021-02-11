@@ -64,7 +64,7 @@ public class PolynomialApproximation extends Approximation {
                 return new SingularValueDecomposition(matrixX);
             }
             default: {
-                return new StandardizationDecomposition(matrixX);
+                return new Standardization(matrixX);
             }
         }
     }
