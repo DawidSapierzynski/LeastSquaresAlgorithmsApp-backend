@@ -27,12 +27,12 @@ public class GivensRotation {
         return new GivensRotation(c, s, r);
     }
 
-    public static Matrix G(int i, int j, GivensRotation givensRotation, int size) {
+    public Matrix getGivensRotationMatrix(int i, int j, int size) {
         Matrix g = Matrix.identity(size, size);
-        g.set(i, i, givensRotation.getC());
-        g.set(i, j, -givensRotation.getS());
-        g.set(j, i, givensRotation.getS());
-        g.set(j, j, givensRotation.getC());
+        g.set(i, i, this.getC());
+        g.set(i, j, -this.getS());
+        g.set(j, i, this.getS());
+        g.set(j, j, this.getC());
         return g;
     }
 }

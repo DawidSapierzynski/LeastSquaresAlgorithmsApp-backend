@@ -34,7 +34,7 @@ class GivensRotationTest {
                 {0.0, 0.0, 0.0, 0.8222, -0.5692},
                 {0.0, 0.0, 0.0, 0.5692, 0.8222}
         };
-        double[][] g = GivensRotation.G(3, 4, givensRotation, 5).getArray();
+        double[][] g = givensRotation.getGivensRotationMatrix(3, 4, 5).getArray();
 
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[0].length; j++) {
