@@ -1,20 +1,21 @@
 package pl.edu.wat.wcy.isi.app.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PointXY implements Comparable<PointXY> {
-    private final double x;
-    private final double y;
+    private double x;
+    private double y;
+    private double weight;
 
     public PointXY(double x, double y) {
         this.x = x;
         this.y = y;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
+        this.weight = 1;
     }
 
     @Override

@@ -29,6 +29,16 @@ public abstract class ReadSeriesDates implements Runnable {
             PointXY pointXY = new PointXY(x, y);
             points.add(pointXY);
             logger.debug("Add point: {}", pointXY);
+        } else if (split.length == 3) {
+            double x, y, weight;
+
+            x = Double.parseDouble(split[0].trim());
+            y = Double.parseDouble(split[1].trim());
+            weight = Double.parseDouble(split[2].trim());
+
+            PointXY pointXY = new PointXY(x, y, weight);
+            points.add(pointXY);
+            logger.debug("Add point: {}", pointXY);
         } else {
             logger.error("Not prase line: {}", line);
         }

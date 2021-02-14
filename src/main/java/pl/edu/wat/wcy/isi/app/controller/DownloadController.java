@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.wat.wcy.isi.app.dto.MathematicalFunctionDTO;
 import pl.edu.wat.wcy.isi.app.dto.message.request.GenerateDataSeriesForm;
+import pl.edu.wat.wcy.isi.app.core.WeightDistribution;
 import pl.edu.wat.wcy.isi.app.service.DownloadService;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public class DownloadController {
 
     @PutMapping(value = "/generateDataSeries", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> generateDataSeries(@RequestBody GenerateDataSeriesForm dataSeriesForm) {
-        byte[] text = downloadService.generateDataSeries(dataSeriesForm.isTrigonometricPolynomial(), dataSeriesForm.getMathematicalFunctionDTO(), dataSeriesForm.getNumberPoints());
+        WeightDistribution weightDistribution = WeightDistribution.valueOf(dataSeriesForm.getWeightDistribution().toUpperCase());
+        byte[] text = downloadService.generateDataSeries(weightDistribution, dataSeriesForm.getMathematicalFunctionDTO(), dataSeriesForm.getNumberPoints());
 
         log.info("Generating data series completed successfully.");
         return new ResponseEntity<>(text, HttpStatus.OK);

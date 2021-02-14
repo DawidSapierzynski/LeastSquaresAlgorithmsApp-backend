@@ -18,5 +18,5 @@ public class GenerateDataSeriesForm {
     @Min(value = 5, message = "Number of points mustn't be less than 5")
     private int numberPoints;
     private MathematicalFunctionDTO mathematicalFunctionDTO;
-    private boolean trigonometricPolynomial;
+    private String weightDistribution;
 }

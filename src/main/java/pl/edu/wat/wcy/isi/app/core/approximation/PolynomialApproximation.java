@@ -25,10 +25,10 @@ public class PolynomialApproximation extends Approximation {
         Matrix matrixX, matrixY, matrixA;
         List<PointXY> mapPoints = getPoints();
 
-        matrixX = setMatrixBaseFunction(mapPoints.stream().mapToDouble(PointXY::getX).toArray());
+        matrixX = setMatrixBaseFunction(mapPoints);
         logger.debug("Matrix X:\n {}", matrixX);
 
-        matrixY = setMatrixY(mapPoints.stream().mapToDouble(PointXY::getY).toArray());
+        matrixY = setMatrixY(mapPoints);
         logger.debug("Matrix Y:\n {}", matrixY);
 
         Decomposition decomposition = getDecomposition(matrixX, leastSquaresMethod);
@@ -36,7 +36,6 @@ public class PolynomialApproximation extends Approximation {
         logger.debug("Decomposition - Matrix A:\n {}", matrixA);
 
         setMathematicalFunctions(createMathematicalFunction(mapMatrixAToList(matrixA)));
-
         logger.info("Absolute error Polynomial Approximation = {}", calculateError(leastSquaresMethod));
 
         return getMathematicalFunctions();
@@ -69,13 +68,15 @@ public class PolynomialApproximation extends Approximation {
         }
     }
 
-    private Matrix setMatrixBaseFunction(double[] pointsX) {
-        int size = pointsX.length;
+    private Matrix setMatrixBaseFunction(List<PointXY> pointsXY) {
+        int size = pointsXY.size();
         double[][] matrix = new double[size][getDegree() + 1];
+        PointXY pointXY;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j <= getDegree(); j++) {
-                matrix[i][j] = AlgebraicPolynomial.getValueMonomial(pointsX[i], j);
+                pointXY = pointsXY.get(i);
+                matrix[i][j] = pointXY.getWeight() * AlgebraicPolynomial.getValueMonomial(pointXY.getX(), j);
             }
         }
         return new Matrix(matrix);
@@ -89,11 +90,14 @@ public class PolynomialApproximation extends Approximation {
         return result;
     }
 
-    private Matrix setMatrixY(double[] pointsY) {
-        double[][] y = new double[pointsY.length][1];
+    private Matrix setMatrixY(List<PointXY> pointsXY) {
+        int size = pointsXY.size();
+        double[][] y = new double[size][1];
+        PointXY pointXY;
 
-        for (int i = 0; i < pointsY.length; i++) {
-            y[i][0] = pointsY[i];
+        for (int i = 0; i < size; i++) {
+            pointXY = pointsXY.get(i);
+            y[i][0] = pointXY.getWeight() * pointXY.getY();
         }
 
         return new Matrix(y);
