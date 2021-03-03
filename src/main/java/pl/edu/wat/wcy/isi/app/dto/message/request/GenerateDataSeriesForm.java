@@ -19,4 +19,5 @@ public class GenerateDataSeriesForm {
     private int numberPoints;
     private MathematicalFunctionDTO mathematicalFunctionDTO;
     private String weightDistribution;
+    private String distanceX;
 }

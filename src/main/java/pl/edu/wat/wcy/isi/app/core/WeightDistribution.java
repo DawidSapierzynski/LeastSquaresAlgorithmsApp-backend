@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 
 public enum WeightDistribution {
     NONE("none", (a, b) -> 1L),
-    NORMAL("normal", (a, b) -> Math.abs(Distribution.normal(a, b)));
+    NORMAL("normal", (a, b) -> Math.abs(Distribution.normalRound(a, b)));
 
     private final String distributionName;
     private final BiFunction<Double, Double, Long> function;
