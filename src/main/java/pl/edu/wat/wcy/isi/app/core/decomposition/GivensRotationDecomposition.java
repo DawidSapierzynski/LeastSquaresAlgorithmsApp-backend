@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GivensRotationDecomposition extends Decomposition {
-    private Matrix Q, R;
+    protected Matrix Q, R;
 
     public GivensRotationDecomposition(Matrix matrixX) {
         super(matrixX);
@@ -21,12 +21,12 @@ public class GivensRotationDecomposition extends Decomposition {
         Matrix g;
 
         for (int j = 0; j < n; j++) {
-            for (int i = m - 1; i > j; i--) {
+            for (int i = j + 1; i < m; i++) {
                 if (this.R.get(i, j) != 0.0) {
-                    givensRotation = GivensRotation.givens(this.R.get(i - 1, j), this.R.get(i, j));
+                    givensRotation = GivensRotation.givens(this.R.get(j, j), this.R.get(i, j));
                     g = givensRotation.getGivensRotationMatrix(i, j, m);
                     this.R = g.times(this.R);
-                    this.Q = this.Q.times(g);
+                    this.Q = this.Q.times(g.transpose());
                 }
             }
         }
