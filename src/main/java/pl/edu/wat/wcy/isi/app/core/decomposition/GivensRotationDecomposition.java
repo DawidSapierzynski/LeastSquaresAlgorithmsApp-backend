@@ -1,7 +1,9 @@
 package pl.edu.wat.wcy.isi.app.core.decomposition;
 
 import Jama.Matrix;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GivensRotationDecomposition extends Decomposition {
     private Matrix Q, R;
 
@@ -19,11 +21,13 @@ public class GivensRotationDecomposition extends Decomposition {
         Matrix g;
 
         for (int j = 0; j < n; j++) {
-            for (int i = m - 1; i > 1; i--) {
-                givensRotation = GivensRotation.givens(this.R.get(i - 1, j), this.R.get(i, j));
-                g = givensRotation.getGivensRotationMatrix(i, j, m);
-                this.R = g.transpose().times(this.R);
-                this.Q = this.Q.times(g);
+            for (int i = m - 1; i > j; i--) {
+                if (this.R.get(i, j) != 0.0) {
+                    givensRotation = GivensRotation.givens(this.R.get(i - 1, j), this.R.get(i, j));
+                    g = givensRotation.getGivensRotationMatrix(i, j, m);
+                    this.R = g.times(this.R);
+                    this.Q = this.Q.times(g);
+                }
             }
         }
     }

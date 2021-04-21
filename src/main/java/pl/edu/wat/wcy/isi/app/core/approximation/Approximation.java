@@ -28,9 +28,9 @@ public abstract class Approximation {
         double x0 = points.get(0).getX();
         double xn = points.get(size - 1).getX();
 
-        double step = (xn - x0) / approximationsPointsSize;
+        double step = (xn - x0) / (approximationsPointsSize - 1);
 
-        for (double i = x0; i <= xn + step; i += step) {
+        for (double i = x0; i <= xn; i += step) {
             approximationsPoints.add(new PointXY(i, getPolynomial().evaluate(i)));
         }
 

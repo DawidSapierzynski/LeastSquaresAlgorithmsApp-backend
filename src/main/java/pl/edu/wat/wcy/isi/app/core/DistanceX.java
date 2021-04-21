@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum DistanceX {
     EQUIDISTANT("equidistant"),
-    NORMAL("normal");
+    NORMAL("normal"),
+    CHEBYSHEV("chebyshev");
 
     private final String name;
 

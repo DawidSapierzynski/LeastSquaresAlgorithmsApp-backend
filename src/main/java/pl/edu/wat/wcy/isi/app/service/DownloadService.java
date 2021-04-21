@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
 import static java.util.stream.IntStream.range;
 
 @Service
@@ -111,14 +113,23 @@ public class DownloadService {
         if (DistanceX.NORMAL.equals(distanceX)) {
             BigDecimal x;
             double mean = (endInterval.doubleValue() - beginningInterval.doubleValue()) / 2;
-            Set<BigDecimal> xs = new HashSet<>(Set.of(beginningInterval, endInterval));
-            while (xs.size() <= numberPoints) {
-                x = BigDecimal.valueOf(Distribution.normal(mean, difference.doubleValue() / 6));
-                if (x.compareTo(beginningInterval) > 0 && x.compareTo(endInterval) < 0) {
-                    xs.add(x);
-                }
+            double standardDeviation = difference.doubleValue() / 5.3;
+            Set<BigDecimal> xs = new HashSet<>();
+            while (xs.size() < numberPoints) {
+                x = BigDecimal.valueOf(Distribution.normal(mean, standardDeviation));
+                xs.add(x);
             }
             return new ArrayList<>(xs);
+        } else if (DistanceX.CHEBYSHEV.equals(distanceX)) {
+            List<BigDecimal> xs = new ArrayList<>();
+            BigDecimal a = beginningInterval.subtract(endInterval).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+            BigDecimal b = beginningInterval.add(endInterval).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+            for (int i = 0; i < numberPoints; i++) {
+                xs.add(getZeroChebyshevPolynomial(i, numberPoints));
+            }
+            xs = xs.stream().map(x -> x.multiply(a).add(b))
+                    .collect(Collectors.toList());
+            return xs;
         } else {
             BigDecimal step = difference.divide(BigDecimal.valueOf((double) numberPoints - 1), RoundingMode.HALF_UP);
             if (step.doubleValue() <= 0.0) {
@@ -128,5 +139,9 @@ public class DownloadService {
                     .mapToObj(i -> beginningInterval.add(step.multiply(new BigDecimal(String.valueOf(i)))))
                     .collect(Collectors.toList());
         }
+    }
+
+    private BigDecimal getZeroChebyshevPolynomial(int i, int n) {
+        return BigDecimal.valueOf(cos(((2.0 * i + 1) / (2.0 * n)) * PI));
     }
 }
