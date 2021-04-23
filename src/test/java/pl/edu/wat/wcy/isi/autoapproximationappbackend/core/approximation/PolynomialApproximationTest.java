@@ -44,7 +44,7 @@ class PolynomialApproximationTest {
         Polynomial resultPolynomial;
         double r, cr;
 
-        resultPolynomial = polynomialApproximation.doApproximations(LeastSquaresMethod.STANDARDIZATION).get(0).getPolynomial();
+        resultPolynomial = polynomialApproximation.doApproximations(LeastSquaresMethod.NORMALIZATION).get(0).getPolynomial();
 
         logger.info("{}", function);
         logger.info("{}", resultPolynomial);

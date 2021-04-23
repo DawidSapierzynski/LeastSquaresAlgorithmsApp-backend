@@ -1,7 +1,7 @@
 package pl.edu.wat.wcy.isi.app.core;
 
 public enum LeastSquaresMethod {
-    STANDARDIZATION("Standardization"),
+    NORMALIZATION("Normalization"),
     HOUSEHOLDER_TRANSFORMATION("Householder Transformation"),
     GIVENS_ROTATION("Givens Rotation"),
     SINGULAR_VALUE_DECOMPOSITION("Singular Value Decomposition");
