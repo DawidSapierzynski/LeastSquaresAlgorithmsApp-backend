@@ -21,7 +21,7 @@ public class GivensRotationDecomposition extends Decomposition {
         Matrix g;
 
         for (int j = 0; j < n; j++) {
-            for (int i = j + 1; i < m; i++) {
+            for (int i = m - 1; i > j; i--) {
                 if (this.R.get(i, j) != 0.0) {
                     givensRotation = GivensRotation.givens(this.R.get(j, j), this.R.get(i, j));
                     g = givensRotation.getGivensRotationMatrix(i, j, m);

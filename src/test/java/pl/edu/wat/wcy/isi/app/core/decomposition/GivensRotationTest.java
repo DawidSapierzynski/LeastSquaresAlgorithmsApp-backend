@@ -10,14 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 class GivensRotationTest {
 
-    public static final double DELTA = 0.0001;
+    public static final double DELTA = 1e-4;
 
     @Test
     void givens() {
-        GivensRotation givensRotation = GivensRotation.givens(0.9134, 0.6324);
+        GivensRotation givensRotation = GivensRotation.givens(12, -4);
 
-        assertEquals(0.8222, givensRotation.getC(), DELTA);
-        assertEquals(0.5692, givensRotation.getS(), DELTA);
+        assertEquals(0.94868, givensRotation.getC(), DELTA);
+        assertEquals(-0.31622, givensRotation.getS(), DELTA);
 
         log.info("c={}", givensRotation.getC());
         log.info("s={}", givensRotation.getS());
@@ -26,15 +26,13 @@ class GivensRotationTest {
 
     @Test
     void g() {
-        GivensRotation givensRotation = GivensRotation.givens(0.9134, 0.6324);
+        GivensRotation givensRotation = GivensRotation.givens(12, -4);
         double[][] m = new double[][]{
-                {1.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, 1.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, 1.0, 0.0, 0.0},
-                {0.0, 0.0, 0.0, 0.8222, -0.5692},
-                {0.0, 0.0, 0.0, 0.5692, 0.8222}
+                {0.94868, 0.0, -0.31622},
+                {0.0, 1.0, 0.0},
+                {0.31622, 0.0, 0.94868}
         };
-        double[][] g = givensRotation.getGivensRotationMatrix(3, 4, 5).getArray();
+        double[][] g = givensRotation.getGivensRotationMatrix(2, 0, 3).getArray();
 
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[0].length; j++) {

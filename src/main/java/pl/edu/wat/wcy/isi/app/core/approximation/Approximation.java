@@ -27,11 +27,13 @@ public abstract class Approximation {
         List<PointXY> approximationsPoints = new ArrayList<>();
         double x0 = points.get(0).getX();
         double xn = points.get(size - 1).getX();
+        double x = x0;
 
         double step = (xn - x0) / (approximationsPointsSize - 1);
 
-        for (double i = x0; i <= xn; i += step) {
-            approximationsPoints.add(new PointXY(i, getPolynomial().evaluate(i)));
+        for (int i = 0; i < approximationsPointsSize; i++) {
+            approximationsPoints.add(new PointXY(x, getPolynomial().evaluate(x)));
+            x += step;
         }
 
         return approximationsPoints;
