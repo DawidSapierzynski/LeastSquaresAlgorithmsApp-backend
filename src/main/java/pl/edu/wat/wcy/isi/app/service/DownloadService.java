@@ -14,10 +14,7 @@ import pl.edu.wat.wcy.isi.app.model.PointXY;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.PI;
@@ -101,7 +98,7 @@ public class DownloadService {
                     .mapToObj(x -> new PointXY(x, polynomial.evaluate(x), weightDistribution.applyValue(MEAN, STANDARD_DEVIATION)))
                     .forEach(points::add);
         }
-
+        Collections.sort(points);
         return points;
     }
 
@@ -112,8 +109,8 @@ public class DownloadService {
                 .setScale(20, RoundingMode.HALF_UP);
         if (DistanceX.NORMAL.equals(distanceX)) {
             BigDecimal x;
-            double mean = (endInterval.doubleValue() - beginningInterval.doubleValue()) / 2;
-            double standardDeviation = difference.doubleValue() / 5.3;
+            double mean = (endInterval.doubleValue() + beginningInterval.doubleValue()) / 2;
+            double standardDeviation = difference.doubleValue() / 6;
             Set<BigDecimal> xs = new HashSet<>();
             while (xs.size() < numberPoints) {
                 x = BigDecimal.valueOf(Distribution.normal(mean, standardDeviation));

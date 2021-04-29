@@ -45,7 +45,7 @@ public abstract class Approximation {
         }
 
         this.absoluteError = getPoints().stream()
-                .mapToDouble(p -> Math.pow(p.getY() - getPolynomial().evaluate(p.getX()), 2))
+                .mapToDouble(p -> Math.abs(p.getY() - getPolynomial().evaluate(p.getX())))
                 .sum();
 
         return this.absoluteError;
