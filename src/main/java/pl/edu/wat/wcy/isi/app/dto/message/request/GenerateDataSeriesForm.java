@@ -20,4 +20,5 @@ public class GenerateDataSeriesForm {
     private MathematicalFunctionDTO mathematicalFunctionDTO;
     private String weightDistribution;
     private String distanceX;
+    private Boolean noise;
 }

@@ -28,9 +28,11 @@ public class DownloadService {
     public static final double STANDARD_DEVIATION = 2.0;
 
     private final PolynomialMapper polynomialMapper;
+    private final Random random;
 
     public DownloadService(PolynomialMapper polynomialMapper) {
         this.polynomialMapper = polynomialMapper;
+        this.random = new Random();
     }
 
     public byte[] getApproximationResult(List<MathematicalFunctionDTO> mathematicalFunctionDTOs) {
@@ -53,12 +55,15 @@ public class DownloadService {
         return stringBuilder.toString().getBytes();
     }
 
-    public byte[] generateDataSeries(DistanceX distanceX, WeightDistribution weightDistribution, MathematicalFunctionDTO mathematicalFunctionDTO, int numberPoints) {
+    public byte[] generateDataSeries(DistanceX distanceX, WeightDistribution weightDistribution, MathematicalFunctionDTO mathematicalFunctionDTO, int numberPoints, boolean noise) {
         StringBuilder stringBuilder = new StringBuilder();
         Polynomial polynomial = polynomialMapper.mapToPolynomial(mathematicalFunctionDTO.getPolynomialDTO(), false);
         logger.debug("Generate polynomial {}", polynomial);
 
         List<PointXY> points = generatePoints(distanceX, weightDistribution, mathematicalFunctionDTO.getDomainFunction(), numberPoints, polynomial);
+        if (noise) {
+            addNoises(points);
+        }
 
         stringBuilder.append("//")
                 .append(polynomial)
@@ -66,18 +71,12 @@ public class DownloadService {
 
         if (WeightDistribution.NONE.equals(weightDistribution)) {
             points.forEach(p ->
-                    stringBuilder.append(p.getX())
-                            .append(";")
-                            .append(p.getY())
+                    stringBuilder.append(p.toStringWithBeforeY())
                             .append("\n")
             );
         } else {
             points.forEach(p ->
-                    stringBuilder.append(p.getX())
-                            .append(";")
-                            .append(p.getY())
-                            .append(";")
-                            .append(p.getWeight())
+                    stringBuilder.append(p.toStringWithWeight())
                             .append("\n")
             );
         }
@@ -100,6 +99,17 @@ public class DownloadService {
         }
         Collections.sort(points);
         return points;
+    }
+
+    private void addNoises(List<PointXY> points) {
+        int b = points.size() / 20 + 1;
+        Set<Integer> x = new HashSet<>();
+
+        while (x.size() < b) {
+            x.add(random.nextInt(points.size()));
+        }
+
+        x.stream().map(points::get).forEach(p -> p.addY((random.nextDouble() - 0.5) * p.getY() * 0.125));
     }
 
     private List<BigDecimal> getXs(DistanceX distanceX, int numberPoints, DomainFunction domainFunction) {

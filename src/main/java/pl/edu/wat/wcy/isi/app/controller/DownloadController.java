@@ -6,9 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.wat.wcy.isi.app.core.DistanceX;
+import pl.edu.wat.wcy.isi.app.core.WeightDistribution;
 import pl.edu.wat.wcy.isi.app.dto.MathematicalFunctionDTO;
 import pl.edu.wat.wcy.isi.app.dto.message.request.GenerateDataSeriesForm;
-import pl.edu.wat.wcy.isi.app.core.WeightDistribution;
 import pl.edu.wat.wcy.isi.app.service.DownloadService;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class DownloadController {
     public ResponseEntity<byte[]> generateDataSeries(@RequestBody GenerateDataSeriesForm dataSeriesForm) {
         WeightDistribution weightDistribution = WeightDistribution.valueOf(dataSeriesForm.getWeightDistribution().toUpperCase());
         DistanceX distanceX = DistanceX.valueOf(dataSeriesForm.getDistanceX().toUpperCase());
-        byte[] text = downloadService.generateDataSeries(distanceX, weightDistribution, dataSeriesForm.getMathematicalFunctionDTO(), dataSeriesForm.getNumberPoints());
+        byte[] text = downloadService.generateDataSeries(distanceX, weightDistribution, dataSeriesForm.getMathematicalFunctionDTO(), dataSeriesForm.getNumberPoints(), dataSeriesForm.getNoise());
 
         log.info("Generating data series completed successfully.");
         return new ResponseEntity<>(text, HttpStatus.OK);
