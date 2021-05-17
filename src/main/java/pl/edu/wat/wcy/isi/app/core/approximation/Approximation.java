@@ -14,6 +14,7 @@ public abstract class Approximation {
     private int degree;
     private final int size;
     protected double absoluteError;
+    protected double rSquared;
 
     public Approximation(List<PointXY> points, int degree) {
         this.points = points;
@@ -45,10 +46,29 @@ public abstract class Approximation {
         }
 
         this.absoluteError = getPoints().stream()
-                .mapToDouble(p -> Math.abs(p.getY() - getPolynomial().evaluate(p.getX())))
+                .mapToDouble(p -> Math.pow(p.getY() - getPolynomial().evaluate(p.getX()), 2))
                 .sum();
 
         return this.absoluteError;
+    }
+
+    public double calculateRSquared(LeastSquaresMethod leastSquaresMethod) {
+        if (getPolynomial() == null) {
+            doApproximations(leastSquaresMethod);
+        }
+        double average = getPoints().stream()
+                .mapToDouble(PointXY::getY)
+                .average().orElse(0);
+        double SSm = getPoints().stream()
+                .mapToDouble(p -> Math.pow(getPolynomial().evaluate(p.getX()) - average, 2))
+                .sum();
+        double SSt = getPoints().stream()
+                .mapToDouble(p -> Math.pow(p.getY() - average, 2))
+                .sum();
+
+        this.rSquared = SSm / SSt;
+
+        return this.rSquared;
     }
 
     public Polynomial getPolynomial() {
@@ -81,5 +101,9 @@ public abstract class Approximation {
 
     public double getAbsoluteError() {
         return absoluteError;
+    }
+
+    public double getrSquared() {
+        return rSquared;
     }
 }

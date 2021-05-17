@@ -37,6 +37,7 @@ public class PolynomialApproximation extends Approximation {
 
         setMathematicalFunctions(createMathematicalFunction(mapMatrixAToList(matrixA)));
         logger.info("Absolute error Polynomial Approximation = {}", calculateError(leastSquaresMethod));
+        logger.info("RSquared = {}", calculateRSquared(leastSquaresMethod));
 
         return getMathematicalFunctions();
     }
