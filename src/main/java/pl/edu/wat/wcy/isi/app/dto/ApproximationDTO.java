@@ -16,5 +16,5 @@ public class ApproximationDTO {
     private List<MathematicalFunctionDTO> mathematicalFunctionDTOs;
     private List<PointXY> points;
     private double absoluteError;
-    private double rSquared;
+    private double convergenceCoefficient;
 }

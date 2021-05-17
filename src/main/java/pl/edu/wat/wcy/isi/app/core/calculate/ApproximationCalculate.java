@@ -32,6 +32,6 @@ public class ApproximationCalculate implements Runnable {
         approximationDTO.setMathematicalFunctionDTOs(mathematicalFunctionMapper.mapToMathematicalFunctionDTOs(approximation.doApproximations(chosenMethodDTO.getLeastSquaresMethod())));
         approximationDTO.setPoints(approximation.getApproximationsPoints(NUMBER_SAMPLES * points.size()));
         approximationDTO.setAbsoluteError(approximation.getAbsoluteError());
-        approximationDTO.setRSquared(approximation.getrSquared());
+        approximationDTO.setConvergenceCoefficient(approximation.getConvergenceCoefficient());
     }
 }
