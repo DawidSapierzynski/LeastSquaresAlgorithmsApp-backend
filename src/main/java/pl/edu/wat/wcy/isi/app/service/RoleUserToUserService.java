@@ -6,6 +6,7 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.RoleUserToUserEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.RoleUserToUserRepository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class RoleUserToUserService {
         return roleUserToUserRepository.save(roleUserToUserEntity);
     }
 
-    public Optional<RoleUserToUserEntity> findById(Long id) {
+    public Optional<RoleUserToUserEntity> findById(BigInteger id) {
         return roleUserToUserRepository.findById(id);
     }
 

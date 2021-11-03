@@ -6,6 +6,7 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.RoleUserToUserEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.RoleUserRepository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class RoleUserService {
         return roleUserRepository.save(roleUserEntity);
     }
 
-    public Optional<RoleUserEntity> findById(Long id) {
+    public Optional<RoleUserEntity> findById(BigInteger id) {
         return roleUserRepository.findById(id);
     }
 

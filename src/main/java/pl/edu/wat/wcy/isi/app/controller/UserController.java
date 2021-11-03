@@ -15,6 +15,7 @@ import pl.edu.wat.wcy.isi.app.mapper.UserMapper;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.service.UserService;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping(produces = "application/json", value = "/{userId}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable("userId") long userId) throws ResourceNotFoundException, ForbiddenException {
+    public ResponseEntity<UserDTO> getUser(@PathVariable("userId") BigInteger userId) throws ResourceNotFoundException, ForbiddenException {
         UserEntity userEntities = userService.findByUserIdAndDeleted(userId, (byte) 0)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
         UserEntity loggedUser = userService.getLoggedUser();
@@ -58,7 +59,7 @@ public class UserController {
 
     @Transactional
     @DeleteMapping(produces = "application/json", value = "/{userId}")
-    public ResponseEntity<ResponseMessage> deletedUser(@PathVariable(value = "userId") Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseMessage> deletedUser(@PathVariable(value = "userId") BigInteger userId) throws ResourceNotFoundException {
         UserEntity user = userService.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
 
@@ -70,7 +71,7 @@ public class UserController {
 
     @Transactional
     @PutMapping(produces = "application/json", value = "/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable(value = "userId") Long userId, @RequestBody UserDTO userDTO) throws ResourceNotFoundException, LoginException {
+    public ResponseEntity<?> updateUser(@PathVariable(value = "userId") BigInteger userId, @RequestBody UserDTO userDTO) throws ResourceNotFoundException, LoginException {
         UserEntity user = userService.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
 

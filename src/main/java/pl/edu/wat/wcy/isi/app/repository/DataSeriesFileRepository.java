@@ -5,9 +5,10 @@ import org.springframework.stereotype.Repository;
 import pl.edu.wat.wcy.isi.app.model.entityModels.DataSeriesFileEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
-public interface DataSeriesFileRepository extends JpaRepository<DataSeriesFileEntity, Long> {
+public interface DataSeriesFileRepository extends JpaRepository<DataSeriesFileEntity, BigInteger> {
     List<DataSeriesFileEntity> findByUserAndDeleted(UserEntity userEntity, byte deleted);
 }

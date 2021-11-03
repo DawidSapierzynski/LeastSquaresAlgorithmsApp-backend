@@ -19,6 +19,7 @@ import pl.edu.wat.wcy.isi.app.service.ApproximationPropertiesService;
 import pl.edu.wat.wcy.isi.app.service.DataSeriesFileService;
 import pl.edu.wat.wcy.isi.app.service.UserService;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ApproximationPropertiesController {
 
     @Transactional
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ApproximationPropertiesDTO> postApproximationProperties(@RequestParam("dataSeriesFileId") long dataSeriesFileId, @RequestParam("degree") int degree) throws ResourceNotFoundException {
+    public ResponseEntity<ApproximationPropertiesDTO> postApproximationProperties(@RequestParam("dataSeriesFileId") BigInteger dataSeriesFileId, @RequestParam("degree") int degree) throws ResourceNotFoundException {
 
         ApproximationPropertiesEntity approximationProperties = new ApproximationPropertiesEntity();
         DataSeriesFileEntity dataSeriesFileEntity = dataSeriesFileService.findById(dataSeriesFileId)
@@ -86,7 +87,7 @@ public class ApproximationPropertiesController {
     }
 
     @GetMapping(produces = "application/json", value = "/{approximationPropertiesId}")
-    public ResponseEntity<ApproximationPropertiesDTO> getApproximationProperties(@PathVariable(value = "approximationPropertiesId") long approximationPropertiesId) throws ResourceNotFoundException, ForbiddenException, SizeException {
+    public ResponseEntity<ApproximationPropertiesDTO> getApproximationProperties(@PathVariable(value = "approximationPropertiesId") BigInteger approximationPropertiesId) throws ResourceNotFoundException, ForbiddenException, SizeException {
         ApproximationPropertiesEntity approximationProperties = approximationPropertiesService.findByIdAndDeleted(approximationPropertiesId, (byte) 0)
                 .orElseThrow(() -> new ResourceNotFoundException("Approximation properties not found for this id: " + approximationPropertiesId));
 
@@ -103,7 +104,7 @@ public class ApproximationPropertiesController {
 
     @Transactional
     @DeleteMapping(produces = "application/json", value = "/{approximationPropertiesId}")
-    public ResponseEntity<ResponseMessage> deletedApproximationProperties(@PathVariable(value = "approximationPropertiesId") long approximationPropertiesId) throws ResourceNotFoundException, ForbiddenException {
+    public ResponseEntity<ResponseMessage> deletedApproximationProperties(@PathVariable(value = "approximationPropertiesId") BigInteger approximationPropertiesId) throws ResourceNotFoundException, ForbiddenException {
         ApproximationPropertiesEntity approximationProperties = approximationPropertiesService.findById(approximationPropertiesId)
                 .orElseThrow(() -> new ResourceNotFoundException("Approximation properties not found for this id: " + approximationPropertiesId));
 

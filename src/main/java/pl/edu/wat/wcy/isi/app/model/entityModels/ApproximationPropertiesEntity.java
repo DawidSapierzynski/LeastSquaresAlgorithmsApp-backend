@@ -1,13 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "approximation_properties", schema = "aaa")
 public class ApproximationPropertiesEntity {
-    private Long approximationPropertiesId;
+    private BigInteger approximationPropertiesId;
     private Integer degreeApproximation;
     private Timestamp dateCreate;
     private Byte deleted = (byte) 0;
@@ -17,11 +18,11 @@ public class ApproximationPropertiesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "approximation_properties_id")
-    public Long getApproximationPropertiesId() {
+    public BigInteger getApproximationPropertiesId() {
         return approximationPropertiesId;
     }
 
-    public void setApproximationPropertiesId(Long approximationPropertiesId) {
+    public void setApproximationPropertiesId(BigInteger approximationPropertiesId) {
         this.approximationPropertiesId = approximationPropertiesId;
     }
 

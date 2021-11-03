@@ -3,6 +3,7 @@ package pl.edu.wat.wcy.isi.app.model.entityModels;
 import pl.edu.wat.wcy.isi.app.model.PointXY;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "data_series_file", schema = "aaa")
 public class DataSeriesFileEntity {
-    private long dataSeriesFileId;
+    private BigInteger dataSeriesFileId;
     private String name;
     private String hashName;
     private Timestamp dateSent;
@@ -27,11 +28,11 @@ public class DataSeriesFileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "data_series_file_id")
-    public Long getDataSeriesFileId() {
+    public BigInteger getDataSeriesFileId() {
         return dataSeriesFileId;
     }
 
-    public void setDataSeriesFileId(long dataSeriesFileId) {
+    public void setDataSeriesFileId(BigInteger dataSeriesFileId) {
         this.dataSeriesFileId = dataSeriesFileId;
     }
 

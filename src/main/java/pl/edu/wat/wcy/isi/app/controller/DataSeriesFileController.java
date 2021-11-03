@@ -20,6 +20,7 @@ import pl.edu.wat.wcy.isi.app.service.DataSeriesFileService;
 import pl.edu.wat.wcy.isi.app.service.StorageService;
 import pl.edu.wat.wcy.isi.app.service.UserService;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class DataSeriesFileController {
 
     @Transactional
     @DeleteMapping(produces = "application/json", value = "/{dataSeriesFileId}")
-    public ResponseEntity<ResponseMessage> deletedDataSeriesFile(@PathVariable(value = "dataSeriesFileId") Long dataSeriesFileId) throws ResourceNotFoundException, ForbiddenException {
+    public ResponseEntity<ResponseMessage> deletedDataSeriesFile(@PathVariable(value = "dataSeriesFileId") BigInteger dataSeriesFileId) throws ResourceNotFoundException, ForbiddenException {
         DataSeriesFileEntity dataSeriesFile = dataSeriesFileService.findById(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("DataSeriesFileEntity not found for this id: " + dataSeriesFileId));
 

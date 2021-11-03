@@ -5,6 +5,7 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.ApproximationPropertiesEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.ApproximationPropertiesRepository;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,11 @@ public class ApproximationPropertiesService {
         return approximationPropertiesRepository.findAll();
     }
 
-    public Optional<ApproximationPropertiesEntity> findById(long id) {
+    public Optional<ApproximationPropertiesEntity> findById(BigInteger id) {
         return approximationPropertiesRepository.findById(id);
     }
 
-    public Optional<ApproximationPropertiesEntity> findByIdAndDeleted(long id, byte deleted) {
+    public Optional<ApproximationPropertiesEntity> findByIdAndDeleted(BigInteger id, byte deleted) {
         return approximationPropertiesRepository.findByApproximationPropertiesIdAndDeleted(id, deleted);
     }
 

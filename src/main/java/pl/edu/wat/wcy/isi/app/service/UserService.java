@@ -10,6 +10,7 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.RoleUserEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.UserRepository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public Optional<UserEntity> findById(Long id) {
+    public Optional<UserEntity> findById(BigInteger id) {
         return userRepository.findById(id);
     }
 
@@ -71,7 +72,7 @@ public class UserService {
         return this.userRepository.findByEmailAndLoginNot(email, login).isPresent();
     }
 
-    public Optional<UserEntity> findByUserIdAndDeleted(long userId, byte deleted) {
+    public Optional<UserEntity> findByUserIdAndDeleted(BigInteger userId, byte deleted) {
         return this.userRepository.findByUserIdAndDeleted(userId, deleted);
     }
 }

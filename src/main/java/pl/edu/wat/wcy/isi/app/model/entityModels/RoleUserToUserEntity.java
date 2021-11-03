@@ -1,23 +1,24 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
 @Table(name = "role_user_to_user", schema = "aaa")
 public class RoleUserToUserEntity {
-    private long roleUserToUserId;
+    private BigInteger roleUserToUserId;
     private UserEntity userByUserId;
     private RoleUserEntity roleUserByRoleUserId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_user_to_user_id")
-    public long getRoleUserToUserId() {
+    public BigInteger getRoleUserToUserId() {
         return roleUserToUserId;
     }
 
-    public void setRoleUserToUserId(long roleUserToUserId) {
+    public void setRoleUserToUserId(BigInteger roleUserToUserId) {
         this.roleUserToUserId = roleUserToUserId;
     }
 

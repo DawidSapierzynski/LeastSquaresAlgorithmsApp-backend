@@ -4,10 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, BigInteger> {
     Optional<UserEntity> findByLogin(String login);
 
     Optional<UserEntity> findByEmail(String email);
@@ -16,5 +17,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByLoginOrEmail(String login, String email);
 
-    Optional<UserEntity> findByUserIdAndDeleted(long userId, byte deleted);
+    Optional<UserEntity> findByUserIdAndDeleted(BigInteger userId, byte deleted);
 }

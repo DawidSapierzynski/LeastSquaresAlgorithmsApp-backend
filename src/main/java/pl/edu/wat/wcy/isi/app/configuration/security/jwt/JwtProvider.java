@@ -1,4 +1,4 @@
-package pl.edu.wat.wcy.isi.app.configuration.jwt;
+package pl.edu.wat.wcy.isi.app.configuration.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

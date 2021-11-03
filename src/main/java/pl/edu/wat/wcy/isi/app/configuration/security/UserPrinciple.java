@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class UserPrinciple implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private final long id;
+    private final BigInteger id;
 
     private final String name;
 
@@ -31,7 +32,7 @@ public class UserPrinciple implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(long id, String name, String login, String email, String password,
+    public UserPrinciple(BigInteger id, String name, String login, String email, String password,
                          boolean isActive, boolean isDeleted,
                          Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -61,7 +62,7 @@ public class UserPrinciple implements UserDetails {
         );
     }
 
-    public long getId() {
+    public BigInteger getId() {
         return id;
     }
 

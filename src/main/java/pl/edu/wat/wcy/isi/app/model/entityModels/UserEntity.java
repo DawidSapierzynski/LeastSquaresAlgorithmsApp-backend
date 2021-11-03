@@ -1,13 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user", schema = "aaa")
 public class UserEntity {
-    private long userId;
+    private BigInteger userId;
     private String login;
     private String password;
     private String firstName;
@@ -24,11 +25,11 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    public long getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 

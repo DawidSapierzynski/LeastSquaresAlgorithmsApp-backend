@@ -1,13 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "role_user", schema = "aaa")
 public class RoleUserEntity {
-    private long roleUserId;
+    private BigInteger roleUserId;
     private String code;
     private String name;
     private Collection<RoleUserToUserEntity> roleUserToUsersByRoleUserId;
@@ -15,11 +16,11 @@ public class RoleUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_user_id")
-    public long getRoleUserId() {
+    public BigInteger getRoleUserId() {
         return roleUserId;
     }
 
-    public void setRoleUserId(long roleUserId) {
+    public void setRoleUserId(BigInteger roleUserId) {
         this.roleUserId = roleUserId;
     }
 

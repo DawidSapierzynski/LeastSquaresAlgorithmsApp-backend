@@ -11,8 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.edu.wat.wcy.isi.app.configuration.jwt.JwtAuthEntryPoint;
-import pl.edu.wat.wcy.isi.app.configuration.jwt.JwtAuthTokenFilter;
+import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtAuthEntryPoint;
+import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtAuthTokenFilter;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserRole;
 
 @Configuration

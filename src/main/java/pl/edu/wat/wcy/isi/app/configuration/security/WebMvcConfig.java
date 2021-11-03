@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import pl.edu.wat.wcy.isi.app.configuration.jwt.JwtAuthTokenFilter;
-import pl.edu.wat.wcy.isi.app.configuration.jwt.JwtProvider;
+import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtAuthTokenFilter;
+import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtProvider;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

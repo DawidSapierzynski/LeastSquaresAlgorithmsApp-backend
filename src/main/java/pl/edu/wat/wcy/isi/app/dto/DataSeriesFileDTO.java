@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.edu.wat.wcy.isi.app.model.PointXY;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 @Setter
 @Builder
 public class DataSeriesFileDTO {
-    private long id;
-    private long userId;
+    private BigInteger id;
+    private BigInteger userId;
     private String name;
     private String hashName;
     private Timestamp dateSent;

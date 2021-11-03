@@ -15,6 +15,7 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.DataSeriesFileEntity;
 import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.repository.DataSeriesFileRepository;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class DataSeriesFileService {
         this.fileStorageProperties = fileStorageProperties;
     }
 
-    public void readFile(Long dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
+    public void readFile(BigInteger dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromFile(dateSeriesFileId.toString() + DataSeriesFileService.FILE_EXTENSION, dataSeriesFileEntity, fileStorageProperties)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
@@ -87,11 +88,11 @@ public class DataSeriesFileService {
         }
     }
 
-    public Optional<DataSeriesFileEntity> findById(Long id) {
+    public Optional<DataSeriesFileEntity> findById(BigInteger id) {
         return dataSeriesFileRepository.findById(id);
     }
 
-    public Optional<DataSeriesFileEntity> findByIdWithPoints(Long id) {
+    public Optional<DataSeriesFileEntity> findByIdWithPoints(BigInteger id) {
         Optional<DataSeriesFileEntity> dataSeriesFileOptional = dataSeriesFileRepository.findById(id);
 
         dataSeriesFileOptional.ifPresent(dataSeriesFileEntity -> {

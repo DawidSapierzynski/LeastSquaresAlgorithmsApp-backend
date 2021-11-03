@@ -4,13 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
 import java.util.Collection;
 
 @Getter
 @Setter
 @Builder
 public class UserDTO {
-    private long id;
+    private BigInteger id;
     private String login;
     private String firstName;
     private String lastName;
