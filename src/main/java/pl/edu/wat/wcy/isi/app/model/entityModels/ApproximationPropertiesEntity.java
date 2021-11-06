@@ -1,12 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
-@Table(name = "approximation_properties", schema = "aaa")
+@Table(name = "approximation_properties")
+@EqualsAndHashCode
 public class ApproximationPropertiesEntity {
     private BigInteger approximationPropertiesId;
     private Integer degreeApproximation;
@@ -25,7 +27,6 @@ public class ApproximationPropertiesEntity {
     public void setApproximationPropertiesId(BigInteger approximationPropertiesId) {
         this.approximationPropertiesId = approximationPropertiesId;
     }
-
 
     @Basic
     @Column(name = "degree_approximation")
@@ -57,25 +58,6 @@ public class ApproximationPropertiesEntity {
         this.deleted = deleted;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ApproximationPropertiesEntity that = (ApproximationPropertiesEntity) o;
-        return Objects.equals(approximationPropertiesId, that.approximationPropertiesId) &&
-                Objects.equals(degreeApproximation, that.degreeApproximation) &&
-                Objects.equals(dateCreate, that.dateCreate) &&
-                Objects.equals(deleted, that.deleted) &&
-                Objects.equals(dataSeriesFile, that.dataSeriesFile) &&
-                Objects.equals(user, that.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(approximationPropertiesId, degreeApproximation, dateCreate, deleted, dataSeriesFile, user);
-    }
-
     @ManyToOne
     @JoinColumn(name = "data_series_file_id", referencedColumnName = "data_series_file_id")
     public DataSeriesFileEntity getDataSeriesFile() {
@@ -95,5 +77,4 @@ public class ApproximationPropertiesEntity {
     public void setUser(UserEntity userByUserId) {
         this.user = userByUserId;
     }
-
 }

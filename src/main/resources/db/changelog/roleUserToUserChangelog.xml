@@ -5,7 +5,7 @@
 
     <changeSet id="addRoleUserToUserTable" author="DS">
         <createTable tableName="role_user_to_user">
-            <column name="role_user_to_user" type="bigint" autoIncrement="true">
+            <column name="role_user_to_user_id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="pk_role_user_to_user" nullable="false"/>
             </column>
             <column name="user_id" type="bigint">

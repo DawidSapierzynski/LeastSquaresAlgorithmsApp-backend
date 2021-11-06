@@ -1,12 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
-@Table(name = "role_user", schema = "aaa")
+@Table(name = "role_user")
+@EqualsAndHashCode
 public class RoleUserEntity {
     private BigInteger roleUserId;
     private String code;
@@ -42,21 +44,6 @@ public class RoleUserEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RoleUserEntity that = (RoleUserEntity) o;
-        return roleUserId == that.roleUserId &&
-                Objects.equals(code, that.code) &&
-                Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(roleUserId, code, name);
     }
 
     @OneToMany(mappedBy = "roleUserByRoleUserId")

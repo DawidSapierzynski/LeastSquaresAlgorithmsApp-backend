@@ -1,5 +1,6 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import lombok.EqualsAndHashCode;
 import pl.edu.wat.wcy.isi.app.model.PointXY;
 
 import javax.persistence.*;
@@ -8,10 +9,10 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "data_series_file", schema = "aaa")
+@Table(name = "data_series_file")
+@EqualsAndHashCode
 public class DataSeriesFileEntity {
     private BigInteger dataSeriesFileId;
     private String name;
@@ -104,23 +105,6 @@ public class DataSeriesFileEntity {
 
     public void setStandardDeviation(Double standardDeviation) {
         this.standardDeviation = standardDeviation;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DataSeriesFileEntity that = (DataSeriesFileEntity) o;
-        return dataSeriesFileId == that.dataSeriesFileId &&
-                Objects.equals(deleted, that.deleted) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(hashName, that.hashName) &&
-                Objects.equals(dateSent, that.dateSent);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dataSeriesFileId, name, hashName, dateSent, deleted);
     }
 
     @ManyToOne

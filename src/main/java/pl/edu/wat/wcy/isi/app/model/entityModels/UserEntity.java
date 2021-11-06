@@ -1,12 +1,14 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "aaa")
+@Table(name = "user")
+@EqualsAndHashCode
 public class UserEntity {
     private BigInteger userId;
     private String login;
@@ -111,27 +113,6 @@ public class UserEntity {
 
     public void setAdmin(Byte admin) {
         this.admin = admin;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return userId == that.userId &&
-                Objects.equals(deleted, that.deleted) &&
-                Objects.equals(active, that.active) &&
-                Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(email, that.email);
-    }
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, login, password, firstName, lastName, email, deleted, active);
     }
 
     @OneToMany(mappedBy = "user")

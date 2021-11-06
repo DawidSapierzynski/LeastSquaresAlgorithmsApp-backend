@@ -1,11 +1,13 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.math.BigInteger;
-import java.util.Objects;
 
 @Entity
-@Table(name = "role_user_to_user", schema = "aaa")
+@Table(name = "role_user_to_user")
+@EqualsAndHashCode
 public class RoleUserToUserEntity {
     private BigInteger roleUserToUserId;
     private UserEntity userByUserId;
@@ -20,19 +22,6 @@ public class RoleUserToUserEntity {
 
     public void setRoleUserToUserId(BigInteger roleUserToUserId) {
         this.roleUserToUserId = roleUserToUserId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RoleUserToUserEntity that = (RoleUserToUserEntity) o;
-        return roleUserToUserId == that.roleUserToUserId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(roleUserToUserId);
     }
 
     @ManyToOne
