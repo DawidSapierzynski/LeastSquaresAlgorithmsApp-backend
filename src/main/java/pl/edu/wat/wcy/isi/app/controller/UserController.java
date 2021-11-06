@@ -17,8 +17,9 @@ import pl.edu.wat.wcy.isi.app.service.UserService;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -37,7 +38,7 @@ public class UserController {
         List<UserEntity> userEntities = userService.getAll();
         List<UserDTO> userDTOs = userMapper.buildUserDTOs(userEntities);
 
-        logger.info("Getting all users successfully completed. Size: {}", userDTOs.size());
+        logger.debug("Getting all users successfully completed. Size: {}", userDTOs.size());
         return new ResponseEntity<>(userDTOs, HttpStatus.OK);
     }
 
@@ -47,13 +48,12 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
         UserEntity loggedUser = userService.getLoggedUser();
 
-        if (!(loggedUser.getUserId() == userId || loggedUser.isAdmin())) {
+        if (!(Objects.equals(loggedUser.getUserId(), userId) || loggedUser.isAdmin())) {
             throw new ForbiddenException("No permission to open this user details");
         }
 
         UserDTO userDTO = userMapper.buildUserDTO(userEntities);
-
-        logger.info("Get user successfully completed. Id: {}", userDTO.getId());
+        logger.debug("Get user successfully completed. Id: {}", userDTO.getId());
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
@@ -65,7 +65,7 @@ public class UserController {
 
         this.userService.delete(user);
 
-        logger.info("Deleted user with id: {}", userId);
+        logger.debug("Deleted user with id: {}", userId);
         return ResponseEntity.ok(new ResponseMessage("Deleted user with id: " + userId));
     }
 
@@ -81,7 +81,7 @@ public class UserController {
 
         user = this.userService.update(user, userDTO);
 
-        logger.info("Updated user with id: {}", userId);
+        logger.debug("Updated user with id: {}", userId);
         return new ResponseEntity<>(this.userMapper.buildUserDTO(user), HttpStatus.OK);
     }
 }

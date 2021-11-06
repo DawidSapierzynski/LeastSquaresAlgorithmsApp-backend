@@ -24,7 +24,6 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/dataSeriesFile")
 public class DataSeriesFileController {
@@ -63,7 +62,7 @@ public class DataSeriesFileController {
 
         dataSeriesFileDTO = dataSeriesFileMapper.buildDataSeriesFileDTO(dataSeriesFileEntity);
 
-        logger.info("The file was successfully added.");
+        logger.debug("The file was successfully added.");
         return new ResponseEntity<>(dataSeriesFileDTO, HttpStatus.OK);
     }
 
@@ -72,18 +71,17 @@ public class DataSeriesFileController {
         List<DataSeriesFileEntity> dataSeriesFileEntities = dataSeriesFileService.findAll();
         List<DataSeriesFileDTO> dataSeriesFileDTOs = dataSeriesFileMapper.buildDataSeriesFileDTOs(dataSeriesFileEntities);
 
-        logger.info("Getting all the files successfully completed. Size: {}", dataSeriesFileDTOs.size());
+        logger.debug("Getting all the files successfully completed. Size: {}", dataSeriesFileDTOs.size());
         return new ResponseEntity<>(dataSeriesFileDTOs, HttpStatus.OK);
     }
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<DataSeriesFileDTO>> getAllForUser() {
         UserEntity userEntity = userService.getLoggedUser();
-
         List<DataSeriesFileEntity> dataSeriesFileEntities = dataSeriesFileService.findByUserAndDeleted(userEntity, (byte) 0);
         List<DataSeriesFileDTO> dataSeriesFileDTOs = dataSeriesFileMapper.buildDataSeriesFileDTOs(dataSeriesFileEntities);
 
-        logger.info("Getting all (for user) the files successfully completed. Size: {}", dataSeriesFileDTOs.size());
+        logger.debug("Getting all (for user) the files successfully completed. Size: {}", dataSeriesFileDTOs.size());
         return new ResponseEntity<>(dataSeriesFileDTOs, HttpStatus.OK);
     }
 
@@ -92,7 +90,6 @@ public class DataSeriesFileController {
     public ResponseEntity<ResponseMessage> deletedDataSeriesFile(@PathVariable(value = "dataSeriesFileId") BigInteger dataSeriesFileId) throws ResourceNotFoundException, ForbiddenException {
         DataSeriesFileEntity dataSeriesFile = dataSeriesFileService.findById(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("DataSeriesFileEntity not found for this id: " + dataSeriesFileId));
-
         UserEntity loggedUser = userService.getLoggedUser();
         if (!(loggedUser.equals(dataSeriesFile.getUser()) || loggedUser.isAdmin())) {
             throw new ForbiddenException("No permission to delete this data series file");
@@ -100,8 +97,7 @@ public class DataSeriesFileController {
         this.dataSeriesFileService.delete(dataSeriesFile);
         this.storageService.deleteFile(dataSeriesFile.getDataSeriesFileId() + DataSeriesFileService.FILE_EXTENSION);
 
-        logger.info("Deleted data series file with id: {}", dataSeriesFileId);
+        logger.debug("Deleted data series file with id: {}", dataSeriesFileId);
         return ResponseEntity.ok(new ResponseMessage("Deleted data series file with id: " + dataSeriesFileId));
     }
-
 }

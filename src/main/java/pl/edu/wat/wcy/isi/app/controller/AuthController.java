@@ -25,12 +25,11 @@ import pl.edu.wat.wcy.isi.app.service.UserService;
 
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtProvider jwtProvider;
@@ -51,14 +50,13 @@ public class AuthController {
     @PostMapping(produces = "application/json", value = "/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = jwtProvider.generateJwtToken(authentication);
         UserPrinciple userDetails = (UserPrinciple) authentication.getPrincipal();
 
-        logger.info("User logged in with id: {}", userDetails.getId());
+        logger.debug("User logged in with id: {}", userDetails.getId());
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), String.valueOf(userDetails.getId()), userDetails.getAuthorities()));
     }
 

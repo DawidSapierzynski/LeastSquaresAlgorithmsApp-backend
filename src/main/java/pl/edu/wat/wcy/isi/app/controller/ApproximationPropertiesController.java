@@ -23,13 +23,10 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
-
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/approximationProperties")
 public class ApproximationPropertiesController {
     private static final Logger logger = LoggerFactory.getLogger(ApproximationPropertiesController.class);
-
     private final ApproximationPropertiesService approximationPropertiesService;
     private final DataSeriesFileService dataSeriesFileService;
     private final UserService userService;
@@ -62,7 +59,7 @@ public class ApproximationPropertiesController {
 
         approximationProperties = approximationPropertiesService.save(approximationProperties);
 
-        logger.info("Adding approximation properties completed successfully.");
+        logger.debug("Adding approximation properties completed successfully.");
         return new ResponseEntity<>(approximationPropertiesMapper.bulidApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
     }
 
@@ -73,7 +70,7 @@ public class ApproximationPropertiesController {
         List<ApproximationPropertiesEntity> approximationPropertiesEntities = approximationPropertiesService.findByUserAndDeleted(userEntity, (byte) 0);
         List<ApproximationPropertiesDTO> approximationPropertiesDTOS = approximationPropertiesMapper.bulidApproximationPropertiesDTOs(approximationPropertiesEntities);
 
-        logger.info("Getting all (for user) the approximation properties successfully completed. Size: {}", approximationPropertiesDTOS.size());
+        logger.debug("Getting all (for user) the approximation properties successfully completed. Size: {}", approximationPropertiesDTOS.size());
         return new ResponseEntity<>(approximationPropertiesDTOS, HttpStatus.OK);
     }
 
@@ -82,7 +79,7 @@ public class ApproximationPropertiesController {
         List<ApproximationPropertiesEntity> approximationPropertiesEntities = approximationPropertiesService.findAll();
         List<ApproximationPropertiesDTO> approximationPropertiesDTOs = approximationPropertiesMapper.bulidApproximationPropertiesDTOs(approximationPropertiesEntities);
 
-        logger.info("Getting all the approximation properties successfully completed. Size: {}", approximationPropertiesDTOs.size());
+        logger.debug("Getting all the approximation properties successfully completed. Size: {}", approximationPropertiesDTOs.size());
         return new ResponseEntity<>(approximationPropertiesDTOs, HttpStatus.OK);
     }
 
@@ -98,7 +95,7 @@ public class ApproximationPropertiesController {
 
         dataSeriesFileService.readFile(approximationProperties.getDataSeriesFile().getDataSeriesFileId(), approximationProperties.getDataSeriesFile());
 
-        logger.info("Get approximation properties successfully completed. Id: {}", approximationPropertiesId);
+        logger.debug("Get approximation properties successfully completed. Id: {}", approximationPropertiesId);
         return new ResponseEntity<>(approximationPropertiesMapper.bulidApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
     }
 
@@ -115,7 +112,7 @@ public class ApproximationPropertiesController {
 
         this.approximationPropertiesService.delete(approximationProperties);
 
-        logger.info("Deleted approximation properties with id: {}", approximationPropertiesId);
+        logger.debug("Deleted approximation properties with id: {}", approximationPropertiesId);
         return ResponseEntity.ok(new ResponseMessage("Deleted approximation properties with id: " + approximationPropertiesId));
     }
 }

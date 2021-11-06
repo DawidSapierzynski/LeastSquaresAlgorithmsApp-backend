@@ -2,7 +2,6 @@ package pl.edu.wat.wcy.isi.app.configuration.exception;
 
 public class ResourceNotFoundException extends Exception {
 
-
     public ResourceNotFoundException(String message) {
         super(message);
     }

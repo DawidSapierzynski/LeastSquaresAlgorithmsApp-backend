@@ -17,11 +17,8 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.UserRole;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true
-)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
     private final UserDetailsServiceImpl userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtAuthEntryPoint unauthorizedHandler;
@@ -33,7 +30,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtAuthTokenFilter = jwtAuthTokenFilter;
-
     }
 
     @Override
@@ -55,7 +51,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -19,6 +19,11 @@
       "name": "app.jwtSecret",
       "type": "java.lang.String",
       "description": "Description for app.jwtSecret."
+    },
+    {
+      "name": "management.endpoints.web.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Description for management.endpoints.web.cors.allowed-origins."
     }
   ]
 }
