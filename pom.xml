@@ -5,88 +5,110 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>${spring-boot.version}</version>
+        <relativePath/>
     </parent>
     <groupId>pl.edu.wat.wcy.isi</groupId>
-    <artifactId>autoapproximationapp-backend</artifactId>
+    <artifactId>LeastSquaresAlgorithmsApp-backend</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>LeastSquaresAlgorithmsApp-backend</name>
-    <description>LeastSquaresAlgorithmsApp-backend</description>
+    <description>Least Squares Algorithms Application - backend</description>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.11</java.version>
+        <java.version>1.17</java.version>
+        <spring-boot.version>2.5.6</spring-boot.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <mysql-connector-java.version>8.0.27</mysql-connector-java.version>
+        <lombok.version>1.18.22</lombok.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <liquibase-core.version>4.6.1</liquibase-core.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <jama.version>1.0.3</jama.version>
+        <json-path.version>2.6.0</json-path.version>
+        <junit-jupiter.version>5.8.1</junit-jupiter.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
+            <version>${spring-boot.version}</version>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>gov.nist.math</groupId>
-            <artifactId>jama</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.47</version>
+            <version>${mysql-connector-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.nist.math</groupId>
+            <artifactId>jama</artifactId>
+            <version>${jama.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.0</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>4.5.0</version>
+            <version>${liquibase-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${validation-api.version}</version>
         </dependency>
 
         <!--Test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
+            <version>${json-path.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -96,7 +118,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.2.RELEASE</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>pl.edu.wat.wcy.isi.app.LeastSquaresAlgorithmsBackend</mainClass>
                 </configuration>
@@ -111,10 +133,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

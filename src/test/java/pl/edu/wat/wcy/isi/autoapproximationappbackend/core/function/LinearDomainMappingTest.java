@@ -9,8 +9,8 @@ import pl.edu.wat.wcy.isi.app.model.PointXY;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 class LinearDomainMappingTest {
     private static final double DELTA = 1e-14;

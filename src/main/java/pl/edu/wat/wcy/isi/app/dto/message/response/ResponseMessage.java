@@ -1,17 +1,12 @@
 package pl.edu.wat.wcy.isi.app.dto.message.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class ResponseMessage {
     private String message;
-
-    public ResponseMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
