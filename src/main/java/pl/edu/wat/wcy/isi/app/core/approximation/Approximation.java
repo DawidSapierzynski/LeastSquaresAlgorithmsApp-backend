@@ -72,7 +72,7 @@ public abstract class Approximation {
     }
 
     public Polynomial getPolynomial() {
-        return mathematicalFunctions.get(0).getPolynomial();
+        return mathematicalFunctions.get(0).polynomial();
     }
 
     public List<PointXY> getPoints() {

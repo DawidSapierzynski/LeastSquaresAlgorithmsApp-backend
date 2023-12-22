@@ -1,5 +1,6 @@
 package pl.edu.wat.wcy.isi.app.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.wat.wcy.isi.app.configuration.exception.LoginException;
 import pl.edu.wat.wcy.isi.app.configuration.security.UserPrinciple;
-import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtProvider;
+import pl.edu.wat.wcy.isi.app.configuration.security.jwt.JwtServiceImpl;
 import pl.edu.wat.wcy.isi.app.dto.message.request.LoginForm;
 import pl.edu.wat.wcy.isi.app.dto.message.request.SignUpForm;
 import pl.edu.wat.wcy.isi.app.dto.message.response.JwtResponse;
@@ -23,7 +24,8 @@ import pl.edu.wat.wcy.isi.app.model.entityModels.UserEntity;
 import pl.edu.wat.wcy.isi.app.service.RoleUserToUserService;
 import pl.edu.wat.wcy.isi.app.service.UserService;
 
-import javax.validation.Valid;
+import static pl.edu.wat.wcy.isi.app.dto.message.response.JwtResponse.BEARER_TOKEN_TYPE;
+
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -32,16 +34,16 @@ public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final JwtProvider jwtProvider;
+    private final JwtServiceImpl jwtServiceImpl;
     private final UserMapper userMapper;
     private final RoleUserMapper roleUserMapper;
     private final RoleUserToUserService roleUserToUserService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtProvider jwtProvider,
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtServiceImpl jwtServiceImpl,
                           UserMapper userMapper, RoleUserMapper roleUserMapper, RoleUserToUserService roleUserToUserService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-        this.jwtProvider = jwtProvider;
+        this.jwtServiceImpl = jwtServiceImpl;
         this.userMapper = userMapper;
         this.roleUserMapper = roleUserMapper;
         this.roleUserToUserService = roleUserToUserService;
@@ -53,11 +55,18 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateJwtToken(authentication);
         UserPrinciple userDetails = (UserPrinciple) authentication.getPrincipal();
+        String jwt = jwtServiceImpl.generateToken(userDetails);
 
         logger.debug("User logged in with id: {}", userDetails.getId());
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), String.valueOf(userDetails.getId()), userDetails.getAuthorities()));
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .tokenType(BEARER_TOKEN_TYPE)
+                .accessToken(jwt)
+                .username(userDetails.getUsername())
+                .userId(String.valueOf(userDetails.getId()))
+                .authorities(userDetails.getAuthorities())
+                .build();
+        return ResponseEntity.ok(jwtResponse);
     }
 
     @Transactional

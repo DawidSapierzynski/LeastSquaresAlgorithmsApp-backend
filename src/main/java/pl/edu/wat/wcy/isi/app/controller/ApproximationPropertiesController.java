@@ -60,7 +60,7 @@ public class ApproximationPropertiesController {
         approximationProperties = approximationPropertiesService.save(approximationProperties);
 
         logger.debug("Adding approximation properties completed successfully.");
-        return new ResponseEntity<>(approximationPropertiesMapper.bulidApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
+        return new ResponseEntity<>(approximationPropertiesMapper.buildApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
     }
 
     @GetMapping(produces = "application/json")
@@ -68,7 +68,7 @@ public class ApproximationPropertiesController {
         UserEntity userEntity = userService.getLoggedUser();
 
         List<ApproximationPropertiesEntity> approximationPropertiesEntities = approximationPropertiesService.findByUserAndDeleted(userEntity, (byte) 0);
-        List<ApproximationPropertiesDTO> approximationPropertiesDTOS = approximationPropertiesMapper.bulidApproximationPropertiesDTOs(approximationPropertiesEntities);
+        List<ApproximationPropertiesDTO> approximationPropertiesDTOS = approximationPropertiesMapper.buildApproximationPropertiesDTOs(approximationPropertiesEntities);
 
         logger.debug("Getting all (for user) the approximation properties successfully completed. Size: {}", approximationPropertiesDTOS.size());
         return new ResponseEntity<>(approximationPropertiesDTOS, HttpStatus.OK);
@@ -77,7 +77,7 @@ public class ApproximationPropertiesController {
     @GetMapping(produces = "application/json", value = "/all")
     public ResponseEntity<List<ApproximationPropertiesDTO>> getApproximationPropertiesAdmin() {
         List<ApproximationPropertiesEntity> approximationPropertiesEntities = approximationPropertiesService.findAll();
-        List<ApproximationPropertiesDTO> approximationPropertiesDTOs = approximationPropertiesMapper.bulidApproximationPropertiesDTOs(approximationPropertiesEntities);
+        List<ApproximationPropertiesDTO> approximationPropertiesDTOs = approximationPropertiesMapper.buildApproximationPropertiesDTOs(approximationPropertiesEntities);
 
         logger.debug("Getting all the approximation properties successfully completed. Size: {}", approximationPropertiesDTOs.size());
         return new ResponseEntity<>(approximationPropertiesDTOs, HttpStatus.OK);
@@ -96,7 +96,7 @@ public class ApproximationPropertiesController {
         dataSeriesFileService.readFile(approximationProperties.getDataSeriesFile().getDataSeriesFileId(), approximationProperties.getDataSeriesFile());
 
         logger.debug("Get approximation properties successfully completed. Id: {}", approximationPropertiesId);
-        return new ResponseEntity<>(approximationPropertiesMapper.bulidApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
+        return new ResponseEntity<>(approximationPropertiesMapper.buildApproximationPropertiesDTO(approximationProperties), HttpStatus.OK);
     }
 
     @Transactional

@@ -142,6 +142,6 @@ public class AlgebraicPolynomial extends Polynomial {
             }
         }
 
-        return "AlgebraicPolynomial: " + stringBuilder.toString();
+        return "AlgebraicPolynomial: " + stringBuilder;
     }
 }

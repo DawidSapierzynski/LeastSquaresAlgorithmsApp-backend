@@ -1,9 +1,9 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import pl.edu.wat.wcy.isi.app.model.PointXY;
 
-import javax.persistence.*;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Collection;

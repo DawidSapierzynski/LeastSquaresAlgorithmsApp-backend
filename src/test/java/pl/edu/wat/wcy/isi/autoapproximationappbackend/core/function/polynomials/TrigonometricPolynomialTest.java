@@ -32,9 +32,9 @@ class TrigonometricPolynomialTest {
         List<Double> coefficientsResult = List.of(8.5, 12d, 13d, -9d, -4d);
         TrigonometricPolynomial correctResult = new TrigonometricPolynomial(coefficientsResult);
 
-        TrigonometricPolynomial reault = trigonometricPolynomial1.plus(trigonometricPolynomial2);
+        TrigonometricPolynomial result = trigonometricPolynomial1.plus(trigonometricPolynomial2);
 
-        assertEquals(correctResult, reault);
+        assertEquals(correctResult, result);
     }
 
     @Test
@@ -42,9 +42,9 @@ class TrigonometricPolynomialTest {
         List<Double> coefficientsResult = List.of(2.5, -5.5, 7d, 13d, -4d);
         TrigonometricPolynomial correctResult = new TrigonometricPolynomial(coefficientsResult);
 
-        TrigonometricPolynomial reault = trigonometricPolynomial1.minus(trigonometricPolynomial2);
+        TrigonometricPolynomial result = trigonometricPolynomial1.minus(trigonometricPolynomial2);
 
-        assertEquals(correctResult, reault);
+        assertEquals(correctResult, result);
     }
 
     @Test

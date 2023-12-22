@@ -53,12 +53,12 @@ class GivensRotationDecompositionTest {
 
     void orthogonalMatrixTest(Matrix matrixQ) {
         int n = matrixQ.getRowDimension();
-        Matrix indetity = Matrix.identity(n, n);
+        Matrix identity = Matrix.identity(n, n);
         Matrix q = matrixQ.times(matrixQ.transpose());
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                assertEquals(indetity.get(i, j), q.get(i, j), DELTA);
+                assertEquals(identity.get(i, j), q.get(i, j), DELTA);
             }
         }
     }

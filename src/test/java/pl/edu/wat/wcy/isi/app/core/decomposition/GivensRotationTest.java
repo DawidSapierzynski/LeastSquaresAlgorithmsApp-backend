@@ -16,12 +16,12 @@ class GivensRotationTest {
     void givens() {
         GivensRotation givensRotation = GivensRotation.givens(12, -4);
 
-        assertEquals(0.94868, givensRotation.getC(), DELTA);
-        assertEquals(-0.31622, givensRotation.getS(), DELTA);
+        assertEquals(0.94868, givensRotation.c(), DELTA);
+        assertEquals(-0.31622, givensRotation.s(), DELTA);
 
-        log.info("c={}", givensRotation.getC());
-        log.info("s={}", givensRotation.getS());
-        log.info("r={}", givensRotation.getR());
+        log.info("c={}", givensRotation.c());
+        log.info("s={}", givensRotation.s());
+        log.info("r={}", givensRotation.r());
     }
 
     @Test

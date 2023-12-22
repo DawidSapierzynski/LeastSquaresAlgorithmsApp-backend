@@ -16,13 +16,13 @@ public class ApproximationPropertiesMapper {
         this.dataSeriesFileMapper = dataSeriesFileMapper;
     }
 
-    public List<ApproximationPropertiesDTO> bulidApproximationPropertiesDTOs(Collection<ApproximationPropertiesEntity> approximationProperties) {
+    public List<ApproximationPropertiesDTO> buildApproximationPropertiesDTOs(Collection<ApproximationPropertiesEntity> approximationProperties) {
         return approximationProperties.stream()
-                .map(this::bulidApproximationPropertiesDTO)
+                .map(this::buildApproximationPropertiesDTO)
                 .collect(Collectors.toList());
     }
 
-    public ApproximationPropertiesDTO bulidApproximationPropertiesDTO(ApproximationPropertiesEntity approximationProperties) {
+    public ApproximationPropertiesDTO buildApproximationPropertiesDTO(ApproximationPropertiesEntity approximationProperties) {
         return ApproximationPropertiesDTO.builder()
                 .id(approximationProperties.getApproximationPropertiesId())
                 .userId(approximationProperties.getUser().getUserId())

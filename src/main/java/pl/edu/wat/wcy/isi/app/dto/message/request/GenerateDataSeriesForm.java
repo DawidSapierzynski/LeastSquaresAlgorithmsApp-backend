@@ -1,13 +1,13 @@
 package pl.edu.wat.wcy.isi.app.dto.message.request;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.edu.wat.wcy.isi.app.dto.MathematicalFunctionDTO;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 @Getter
 @Setter

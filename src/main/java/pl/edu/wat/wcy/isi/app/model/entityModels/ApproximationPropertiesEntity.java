@@ -1,8 +1,8 @@
 package pl.edu.wat.wcy.isi.app.model.entityModels;
 
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 

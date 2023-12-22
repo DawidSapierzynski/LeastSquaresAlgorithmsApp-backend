@@ -40,7 +40,7 @@ public abstract class ReadSeriesDates implements Runnable {
             points.add(pointXY);
             logger.debug("Add point: {}", pointXY);
         } else {
-            logger.error("Not prase line: {}", line);
+            logger.error("Not parse line: {}", line);
         }
     }
 

@@ -113,8 +113,8 @@ public class DownloadService {
     }
 
     private List<BigDecimal> getXs(DistanceX distanceX, int numberPoints, DomainFunction domainFunction) {
-        BigDecimal beginningInterval = BigDecimal.valueOf(domainFunction.getBeginningInterval());
-        BigDecimal endInterval = BigDecimal.valueOf(domainFunction.getEndInterval());
+        BigDecimal beginningInterval = BigDecimal.valueOf(domainFunction.beginningInterval());
+        BigDecimal endInterval = BigDecimal.valueOf(domainFunction.endInterval());
         BigDecimal difference = endInterval.subtract(beginningInterval)
                 .setScale(20, RoundingMode.HALF_UP);
         if (DistanceX.NORMAL.equals(distanceX)) {

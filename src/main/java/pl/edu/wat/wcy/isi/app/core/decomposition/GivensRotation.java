@@ -1,18 +1,10 @@
 package pl.edu.wat.wcy.isi.app.core.decomposition;
 
 import Jama.Matrix;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import static java.lang.Math.*;
 
-@Getter
-@AllArgsConstructor
-public class GivensRotation {
-    private final double c;
-    private final double s;
-    private final double r;
-
+public record GivensRotation(double c, double s, double r) {
     public static GivensRotation givens(double a, double b) {
         double c, s, r, t, u;
         if (b == 0.0) {
@@ -41,10 +33,10 @@ public class GivensRotation {
 
     public Matrix getGivensRotationMatrix(int i, int j, int size) {
         Matrix g = Matrix.identity(size, size);
-        g.set(i, i, this.getC());
-        g.set(i, j, -this.getS());
-        g.set(j, i, this.getS());
-        g.set(j, j, this.getC());
+        g.set(i, i, this.c());
+        g.set(i, j, -this.s());
+        g.set(j, i, this.s());
+        g.set(j, j, this.c());
         return g;
     }
 }

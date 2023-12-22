@@ -1,6 +1,6 @@
 package pl.edu.wat.wcy.isi.app.controller;
 
-import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class DataSeriesFileController {
         dataSeriesFileEntity.setDateSent(new Timestamp(System.currentTimeMillis()));
         dataSeriesFileEntity.setDeleted((byte) 0);
         dataSeriesFileEntity.setName(dataSeriesFile.getOriginalFilename());
-        dataSeriesFileEntity.setHashName(RandomString.make(100));
+        dataSeriesFileEntity.setHashName(RandomStringUtils.random(100));
         dataSeriesFileEntity.setUser(userEntity);
 
         dataSeriesFileService.readMultipartFile(dataSeriesFile, dataSeriesFileEntity);

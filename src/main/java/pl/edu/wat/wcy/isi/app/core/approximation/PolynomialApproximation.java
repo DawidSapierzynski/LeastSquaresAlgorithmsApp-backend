@@ -54,16 +54,16 @@ public class PolynomialApproximation extends Approximation {
 
     private Decomposition getDecomposition(Matrix matrixX, LeastSquaresMethod leastSquaresMethod) {
         switch (leastSquaresMethod) {
-            case HOUSEHOLDER_TRANSFORMATION: {
+            case HOUSEHOLDER_TRANSFORMATION -> {
                 return new HouseholderTransformationDecomposition(matrixX);
             }
-            case GIVENS_ROTATION: {
+            case GIVENS_ROTATION -> {
                 return new GivensRotationDecomposition(matrixX);
             }
-            case SINGULAR_VALUE_DECOMPOSITION: {
+            case SINGULAR_VALUE_DECOMPOSITION -> {
                 return new SingularValueDecomposition(matrixX);
             }
-            default: {
+            default -> {
                 return new Normalization(matrixX);
             }
         }

@@ -24,8 +24,8 @@ public class MathematicalFunctionMapper {
 
     public MathematicalFunctionDTO mapToMathematicalFunctionDTO(MathematicalFunction mathematicalFunction) {
         return MathematicalFunctionDTO.builder()
-                .polynomialDTO(polynomialMapper.mapToPolynomialDTO(mathematicalFunction.getPolynomial()))
-                .domainFunction(mathematicalFunction.getDomainFunction())
+                .polynomialDTO(polynomialMapper.mapToPolynomialDTO(mathematicalFunction.polynomial()))
+                .domainFunction(mathematicalFunction.domainFunction())
                 .build();
     }
 }

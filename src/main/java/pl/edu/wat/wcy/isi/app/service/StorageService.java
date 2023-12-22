@@ -1,5 +1,6 @@
 package pl.edu.wat.wcy.isi.app.service;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.wcy.isi.app.configuration.FileStorageProperties;
 import pl.edu.wat.wcy.isi.app.configuration.exception.ResourceNotFoundException;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
