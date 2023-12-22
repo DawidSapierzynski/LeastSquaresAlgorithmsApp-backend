@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.isi.app.configuration.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +16,17 @@ import java.util.stream.Collectors;
 
 public class UserPrinciple implements UserDetails {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 236521782L;
 
+    @Getter
     private final BigInteger id;
 
+    @Getter
     private final String name;
 
     private final String login;
 
+    @Getter
     private final String email;
 
     private final boolean isActive;
@@ -62,18 +66,6 @@ public class UserPrinciple implements UserDetails {
                 user.getDeleted().equals((byte) 1),
                 authorities
         );
-    }
-
-    public BigInteger getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     @Override

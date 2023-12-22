@@ -1,6 +1,5 @@
 package pl.edu.wat.wcy.isi.app.configuration.security.jwt;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import java.io.IOException;
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.error("Unauthorized error. Message - {}", authException.getMessage());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Login failed: " + authException.getMessage());
     }

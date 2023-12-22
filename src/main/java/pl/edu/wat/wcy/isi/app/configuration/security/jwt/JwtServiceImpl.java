@@ -1,23 +1,23 @@
 package pl.edu.wat.wcy.isi.app.configuration.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class JwtServiceImpl implements JwtService {
-    private final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Value("${app.jwtSecret}")
     private String jwtSecret;
@@ -43,11 +43,12 @@ public class JwtServiceImpl implements JwtService {
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 1000L))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .claims().empty().add(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration * 1000L))
+                .and()
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -55,7 +56,7 @@ public class JwtServiceImpl implements JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -70,10 +71,10 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

@@ -1,5 +1,6 @@
 package pl.edu.wat.wcy.isi.app.core.approximation;
 
+import lombok.Getter;
 import pl.edu.wat.wcy.isi.app.core.LeastSquaresMethod;
 import pl.edu.wat.wcy.isi.app.core.function.MathematicalFunction;
 import pl.edu.wat.wcy.isi.app.core.function.polynomials.Polynomial;
@@ -8,11 +9,12 @@ import pl.edu.wat.wcy.isi.app.model.PointXY;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public abstract class Approximation {
-    private List<MathematicalFunction> mathematicalFunctions;
     private final List<PointXY> points;
-    private int degree;
+    private final int degree;
     private final int size;
+    private List<MathematicalFunction> mathematicalFunctions;
     protected double absoluteError;
     protected double convergenceCoefficient;
 
@@ -75,35 +77,7 @@ public abstract class Approximation {
         return mathematicalFunctions.get(0).polynomial();
     }
 
-    public List<PointXY> getPoints() {
-        return points;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public int getDegree() {
-        return degree;
-    }
-
-    public void setDegree(int degree) {
-        this.degree = degree;
-    }
-
-    public List<MathematicalFunction> getMathematicalFunctions() {
-        return mathematicalFunctions;
-    }
-
     public void setMathematicalFunctions(List<MathematicalFunction> mathematicalFunctions) {
         this.mathematicalFunctions = mathematicalFunctions;
-    }
-
-    public double getAbsoluteError() {
-        return absoluteError;
-    }
-
-    public double getConvergenceCoefficient() {
-        return convergenceCoefficient;
     }
 }
