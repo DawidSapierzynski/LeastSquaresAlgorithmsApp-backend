@@ -5,14 +5,14 @@
 
     <changeSet id="addRoleUserToUserTable" author="DS">
         <createTable tableName="role_user_to_user">
-            <column name="role_user_to_user_id" type="bigint" autoIncrement="true">
+            <column name="role_user_to_user_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="pk_role_user_to_user" nullable="false"/>
             </column>
-            <column name="user_id" type="bigint">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_user_role_user_to_user" referencedTableName="user"
                              referencedColumnNames="user_id"/>
             </column>
-            <column name="role_user_id" type="bigint">
+            <column name="role_user_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_role_user_role_user_to_user"
                              referencedTableName="role_user"
                              referencedColumnNames="role_user_id"/>

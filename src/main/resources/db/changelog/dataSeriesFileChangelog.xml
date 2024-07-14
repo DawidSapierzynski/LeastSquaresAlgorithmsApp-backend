@@ -5,10 +5,10 @@
 
     <changeSet id="addDataSeriesFileTable" author="DS">
         <createTable tableName="data_series_file">
-            <column name="data_series_file_id" type="bigint" autoIncrement="true">
+            <column name="data_series_file_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="pk_data_series_file" nullable="false"/>
             </column>
-            <column name="user_id" type="bigint">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_user_data_series_file" referencedTableName="user"
                              referencedColumnNames="user_id"/>
             </column>

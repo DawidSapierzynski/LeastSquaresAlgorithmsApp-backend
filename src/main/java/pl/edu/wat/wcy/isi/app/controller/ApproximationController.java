@@ -2,7 +2,6 @@ package pl.edu.wat.wcy.isi.app.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +22,12 @@ public class ApproximationController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ApproximationDTO> getApproximation(@RequestBody ApproximationForm approximationForm) {
+    public ResponseEntity<ApproximationDTO> doApproximation(@RequestBody ApproximationForm approximationForm) {
         ApproximationDTO approximationDTO = new ApproximationDTO();
 
         approximationService.doApproximations(approximationForm.getChosenMethod(), approximationForm.getPoints(), approximationDTO);
         logger.info("Approximation successful - {}.", approximationForm.getChosenMethod().getLeastSquaresMethod());
 
-        return new ResponseEntity<>(approximationDTO, HttpStatus.OK);
+        return ResponseEntity.ok(approximationDTO);
     }
 }
