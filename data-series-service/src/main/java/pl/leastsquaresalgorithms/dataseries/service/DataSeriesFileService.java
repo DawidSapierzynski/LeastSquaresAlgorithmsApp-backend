@@ -1,12 +1,12 @@
 package pl.leastsquaresalgorithms.dataseries.service;
 
-import org.apache.tomcat.util.http.fileupload.impl.SizeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.leastsquaresalgorithms.dataseries.configuration.FileStorageProperties;
+import pl.leastsquaresalgorithms.dataseries.configuration.exception.SizeException;
 import pl.leastsquaresalgorithms.dataseries.core.ReadSeriesDates;
 import pl.leastsquaresalgorithms.dataseries.core.ReadSeriesDatesFromFile;
 import pl.leastsquaresalgorithms.dataseries.core.ReadSeriesDatesFromMultipartFile;
@@ -47,7 +47,7 @@ public class DataSeriesFileService {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromFile(dateSeriesFileId.toString() + DataSeriesFileService.FILE_EXTENSION, dataSeriesFileEntity, fileStorageProperties)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
-            logger.debug("ReadSeriesDatesFromFile - isDone: {}", futures.get(0).isDone());
+            logger.debug("ReadSeriesDatesFromFile - isDone: {}", futures.getFirst().isDone());
             if (dataSeriesFileEntity.getPoints().size() < MIN_NUMBER_POINTS) {
                 throw new SizeException("Data series is empty or the file has been deleted.");
             }
@@ -60,7 +60,7 @@ public class DataSeriesFileService {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromMultipartFile(dataSeriesFileEntity, dataSeriesMultipartFile)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
-            logger.debug("ReadSeriesDatesFromMultipartFile - isDone: {}", futures.get(0).isDone());
+            logger.debug("ReadSeriesDatesFromMultipartFile - isDone: {}", futures.getFirst().isDone());
             if (!ReadSeriesDates.checkPoints(dataSeriesFileEntity.getPoints())) {
                 throw new SizeException("The series contains duplicate x");
             }

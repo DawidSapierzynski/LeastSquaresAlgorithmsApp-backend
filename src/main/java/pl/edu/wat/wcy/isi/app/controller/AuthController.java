@@ -68,22 +68,5 @@ public class AuthController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    @Transactional
-    @PostMapping(produces = "application/json", value = "/signup")
-    public ResponseEntity<ResponseMessage> registerUser(@Valid @RequestBody SignUpForm signUpRequest) throws LoginException {
-        if (userService.existsByLogin(signUpRequest.getLogin())) {
-            throw new LoginException("Fail - Username is already taken!");
-        }
 
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            throw new LoginException("Fail - Email is already in use!");
-        }
-
-        UserEntity user = userMapper.buildUserEntity(signUpRequest);
-
-        user = userService.save(user);
-        roleUserToUserService.addRoleToUser(user, roleUserMapper.mapRoleUserEntities(signUpRequest.getRole()));
-
-        return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
-    }
 }

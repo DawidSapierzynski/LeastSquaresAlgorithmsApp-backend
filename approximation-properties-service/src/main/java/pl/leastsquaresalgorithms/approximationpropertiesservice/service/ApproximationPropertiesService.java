@@ -21,8 +21,8 @@ public class ApproximationPropertiesService {
         return approximationPropertiesRepository.save(approximationPropertiesEntity);
     }
 
-    public List<ApproximationPropertiesEntity> findByUserAndDeleted(UserEntity userEntity, byte deleted) {
-        return approximationPropertiesRepository.findByUserAndDeleted(userEntity, deleted);
+    public List<ApproximationPropertiesEntity> findByUserAndDeleted(BigInteger userId, byte deleted) {
+        return approximationPropertiesRepository.findByUserIdAndDeleted(userId, deleted);
     }
 
     public List<ApproximationPropertiesEntity> findAll() {

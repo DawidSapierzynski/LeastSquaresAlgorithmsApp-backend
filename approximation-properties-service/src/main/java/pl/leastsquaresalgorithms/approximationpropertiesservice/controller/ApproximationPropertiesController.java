@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.leastsquaresalgorithms.approximationpropertiesservice.dto.ApproximationPropertiesDTO;
 import pl.leastsquaresalgorithms.approximationpropertiesservice.mapper.ApproximationPropertiesMapper;
 import pl.leastsquaresalgorithms.approximationpropertiesservice.model.ApproximationPropertiesEntity;
 import pl.leastsquaresalgorithms.approximationpropertiesservice.service.ApproximationPropertiesService;
-
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -37,14 +38,14 @@ public class ApproximationPropertiesController {
 
     @Transactional
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ApproximationPropertiesDTO> postApproximationProperties(@RequestParam("dataSeriesFileId") BigInteger dataSeriesFileId, @RequestParam("degree") int degree) throws ResourceNotFoundException {
+    public ResponseEntity<ApproximationPropertiesDTO> postApproximationProperties(@RequestParam("dataSeriesFileId") BigInteger dataSeriesFileId, @RequestParam("degree") int degree, @AuthenticationPrincipal UserDetails userDetails) throws ResourceNotFoundException {
 
         DataSeriesFileEntity dataSeriesFileEntity = dataSeriesFileService.findById(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Data series file not found for this id: " + dataSeriesFileId));
         UserEntity userEntity = userService.getLoggedUser();
 
         ApproximationPropertiesEntity approximationProperties = new ApproximationPropertiesEntity();
-        approximationProperties.setDataSeriesFile(dataSeriesFileEntity);
+        approximationProperties.setDataSeriesFileId(dataSeriesFileId);
         approximationProperties.setDeleted((byte) 0);
         approximationProperties.setUser(userEntity);
         approximationProperties.setDegreeApproximation(degree);

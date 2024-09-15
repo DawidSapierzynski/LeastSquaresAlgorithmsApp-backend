@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ApproximationPropertiesRepository extends JpaRepository<ApproximationPropertiesEntity, BigInteger> {
-    List<ApproximationPropertiesEntity> findByUserAndDeleted(UserEntity userEntity, byte deleted);
+    List<ApproximationPropertiesEntity> findByUserIdAndDeleted(BigInteger userId, byte deleted);
 
-    Optional<ApproximationPropertiesEntity> findByApproximationPropertiesIdAndDeleted(BigInteger userEntity, byte deleted);
+    Optional<ApproximationPropertiesEntity> findByApproximationPropertiesIdAndDeleted(BigInteger approximationPropertiesId, byte deleted);
 }
