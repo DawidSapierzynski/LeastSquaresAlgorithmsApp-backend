@@ -50,8 +50,7 @@ class UserServiceApplicationTests {
     @Test
     void shouldRegisterUser() {
         RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        Set<RoleUserDto> roles = ImmutableSet.of(roleUserDto);
-        SignUpForm signUpForm = new SignUpForm("test", "test", "testtest", "test@test.local", roles, "test1234");
+        SignUpForm signUpForm = creteTestSignUpForm(roleUserDto);
         UserDto response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(signUpForm)
@@ -66,31 +65,21 @@ class UserServiceApplicationTests {
                 .get("/{id}", response.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("firstName", equalTo(response.getFirstName()),
-                        "lastName", equalTo(signUpForm.getLastName()),
-                        "email", equalTo(signUpForm.getEmail()),
-                        "login", equalTo(signUpForm.getLogin()),
-                        "rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()),
-                        "rolesUserDto[0].code", equalTo(roleUserDto.getCode()),
-                        "rolesUserDto[0].name", equalTo(roleUserDto.getName())
-                );
+                .body("id", equalTo(response.getId().intValue()))
+                .body("firstName", equalTo(response.getFirstName()))
+                .body("lastName", equalTo(signUpForm.getLastName()))
+                .body("email", equalTo(signUpForm.getEmail()))
+                .body("login", equalTo(signUpForm.getLogin()))
+                .body("rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()))
+                .body("rolesUserDto[0].code", equalTo(roleUserDto.getCode()))
+                .body("rolesUserDto[0].name", equalTo(roleUserDto.getName()));
     }
 
     @Test
     void shouldUpdateUser() {
         String newMail = "user-uzytkownik@lsaa.local";
         RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        UserDto userDto = UserDto.builder()
-                .id(2L)
-                .login("user")
-                .firstName("User")
-                .lastName("Użytkownik")
-                .email(newMail)
-                .rolesUserDto(ImmutableSet.of(roleUserDto))
-                .deleted(false)
-                .admin(false)
-                .active(true)
-                .build();
+        UserDto userDto = creteUserDto(newMail, roleUserDto);
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(userDto)
@@ -104,13 +93,33 @@ class UserServiceApplicationTests {
                 .get("/{id}", userDto.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("firstName", equalTo(userDto.getFirstName()),
-                        "lastName", equalTo(userDto.getLastName()),
-                        "email", equalTo(userDto.getEmail()),
-                        "login", equalTo(userDto.getLogin()),
-                        "rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()),
-                        "rolesUserDto[0].code", equalTo(roleUserDto.getCode()),
-                        "rolesUserDto[0].name", equalTo(roleUserDto.getName())
+                .body("id", equalTo(userDto.getId().intValue()))
+                .body("firstName", equalTo(userDto.getFirstName()))
+                .body("lastName", equalTo(userDto.getLastName()))
+                .body("email", equalTo(userDto.getEmail()))
+                .body("login", equalTo(userDto.getLogin()))
+                .body("rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()))
+                .body("rolesUserDto[0].code", equalTo(roleUserDto.getCode()))
+                .body("rolesUserDto[0].name", equalTo(roleUserDto.getName())
                 );
+    }
+
+    private static SignUpForm creteTestSignUpForm(RoleUserDto roleUserDto) {
+        Set<RoleUserDto> roles = ImmutableSet.of(roleUserDto);
+        return new SignUpForm("test", "test", "testtest", "test@test.local", roles, "test1234");
+    }
+
+    private static UserDto creteUserDto(String newMail, RoleUserDto roleUserDto) {
+        return UserDto.builder()
+                .id(2L)
+                .login("user")
+                .firstName("User")
+                .lastName("Użytkownik")
+                .email(newMail)
+                .rolesUserDto(ImmutableSet.of(roleUserDto))
+                .deleted(false)
+                .admin(false)
+                .active(true)
+                .build();
     }
 }
