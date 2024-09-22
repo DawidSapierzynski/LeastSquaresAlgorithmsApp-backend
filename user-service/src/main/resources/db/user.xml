@@ -23,13 +23,13 @@
             <column name="email" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_deleted" type="boolean">
+            <column name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_active" type="boolean">
+            <column name="active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_admin" type="boolean">
+            <column name="admin" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -42,10 +42,10 @@
             <column name="password" value="$2a$10$A9v/te2j6QrnsUodlOMaH./rPI7ZPdZZeK/Wm422ZnNUf1bfmJ/5m"/>
             <column name="first_name" value="Admin"/>
             <column name="last_name" value="Administrator"/>
-            <column name="email" value="admin@lsaa.pl"/>
-            <column name="is_deleted" valueBoolean="false"/>
-            <column name="is_active" valueBoolean="true"/>
-            <column name="is_admin" valueBoolean="true"/>
+            <column name="email" value="admin@lsaa.local"/>
+            <column name="deleted" valueBoolean="false"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="admin" valueBoolean="true"/>
         </insert>
         <insert tableName="user">
             <column name="user_id" valueNumeric="2"/>
@@ -53,10 +53,10 @@
             <column name="password" value="$2a$10$A9v/te2j6QrnsUodlOMaH./rPI7ZPdZZeK/Wm422ZnNUf1bfmJ/5m"/>
             <column name="first_name" value="User"/>
             <column name="last_name" value="Użytkownik"/>
-            <column name="email" value="user@lsaa.pl"/>
-            <column name="is_deleted" valueBoolean="false"/>
-            <column name="is_active" valueBoolean="true"/>
-            <column name="is_admin" valueBoolean="fasle"/>
+            <column name="email" value="user@lsaa.local"/>
+            <column name="deleted" valueBoolean="false"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="admin" valueBoolean="fasle"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -37,21 +37,21 @@ public class UserEntity {
     private String email;
 
     @Basic
-    @Column(name = "is_deleted")
+    @Column(name = "deleted")
     private Boolean deleted;
 
     @Basic
-    @Column(name = "is_active")
+    @Column(name = "active")
     private Boolean active;
 
     @Basic
-    @Column(name = "is_admin")
+    @Column(name = "admin")
     private Boolean admin;
 
     @OneToMany(mappedBy = "userByUserId")
     private Collection<RoleUserToUserEntity> roleUserToUsersByUserId;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user_to_user",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_user_id"))

@@ -8,7 +8,6 @@ import pl.leastsquaresalgorithms.user.mapper.UserMapper;
 import pl.leastsquaresalgorithms.user.model.UserEntity;
 import pl.leastsquaresalgorithms.user.repository.UserRepository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +29,7 @@ public class UserService {
         return this.userRepository.findByEmailAndLoginNot(email, login).isPresent();
     }
 
-    public Optional<UserEntity> findByUserIdAndDeleted(BigInteger userId, Boolean deleted) {
+    public Optional<UserEntity> findByUserIdAndDeleted(Long userId, Boolean deleted) {
         return this.userRepository.findByUserIdAndDeleted(userId, deleted);
     }
 
@@ -42,9 +41,9 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public void create(SignUpForm signUpRequest) {
+    public UserEntity create(SignUpForm signUpRequest) {
         UserEntity user = userMapper.buildUserEntity(signUpRequest);
-        save(user);
+        return save(user);
     }
 
     public UserEntity save(UserEntity userEntity) {
