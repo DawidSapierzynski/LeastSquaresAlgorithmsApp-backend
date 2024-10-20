@@ -76,6 +76,32 @@ class UserServiceApplicationTests {
     }
 
     @Test
+    void shouldRegisterUserWithSameLogin() {
+        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
+        SignUpForm signUpForm = new SignUpForm("admin", "admin", "admin", "adminadmin@lsaa.local", ImmutableSet.of(roleUserDto), "test1234");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(signUpForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldRegisterUserWithSameEmail() {
+        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
+        SignUpForm signUpForm = new SignUpForm("admin", "admin", "adminadmin", "admin@lsaa.local", ImmutableSet.of(roleUserDto), "test1234");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(signUpForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void shouldUpdateUser() {
         String newMail = "user-uzytkownik@lsaa.local";
         RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
