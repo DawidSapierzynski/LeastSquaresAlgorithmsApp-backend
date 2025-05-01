@@ -30,8 +30,8 @@ public abstract class Approximation {
 
     public List<PointXY> getApproximationsPoints(int approximationsPointsSize) {
         List<PointXY> approximationsPoints = new ArrayList<>();
-        double x0 = points.get(0).getX();
-        double xn = points.get(size - 1).getX();
+        double x0 = points.getFirst().getX();
+        double xn = points.getLast().getX();
         double x = x0;
 
         double step = (xn - x0) / (approximationsPointsSize - 1);

@@ -1,19 +1,17 @@
 package pl.leastsquaresalgorithms.approximationpropertiesservice.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.leastsquaresalgorithms.approximationpropertiesservice.dto.ApproximationPropertiesDTO;
+import pl.leastsquaresalgorithms.approximationpropertiesservice.model.ApproximationPropertiesEntity;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ApproximationPropertiesMapper {
-    private final DataSeriesFileMapper dataSeriesFileMapper;
-
-    public ApproximationPropertiesMapper(DataSeriesFileMapper dataSeriesFileMapper) {
-        this.dataSeriesFileMapper = dataSeriesFileMapper;
-    }
-
     public List<ApproximationPropertiesDTO> buildApproximationPropertiesDTOs(Collection<ApproximationPropertiesEntity> approximationProperties) {
         return approximationProperties.stream()
                 .map(this::buildApproximationPropertiesDTO)
@@ -23,12 +21,11 @@ public class ApproximationPropertiesMapper {
     public ApproximationPropertiesDTO buildApproximationPropertiesDTO(ApproximationPropertiesEntity approximationProperties) {
         return ApproximationPropertiesDTO.builder()
                 .id(approximationProperties.getApproximationPropertiesId())
-                .userId(approximationProperties.getUser().getUserId())
-                .dataSeriesFileId(approximationProperties.getDataSeriesFile().getDataSeriesFileId())
+                .userId(approximationProperties.getUserId())
+                .dataSeriesFileId(approximationProperties.getDataSeriesFileId())
                 .degree(approximationProperties.getDegreeApproximation())
                 .dateCreate(approximationProperties.getDateCreate())
                 .deleted(approximationProperties.getDeleted().equals((byte) 1))
-                .dataSeriesFileDTO(dataSeriesFileMapper.buildDataSeriesFileDTO(approximationProperties.getDataSeriesFile()))
                 .build();
     }
 }

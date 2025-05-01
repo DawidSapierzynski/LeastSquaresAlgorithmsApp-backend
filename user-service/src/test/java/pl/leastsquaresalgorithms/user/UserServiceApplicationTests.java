@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -16,16 +17,15 @@ import pl.leastsquaresalgorithms.user.dto.RoleUserDto;
 import pl.leastsquaresalgorithms.user.dto.SignUpForm;
 import pl.leastsquaresalgorithms.user.dto.UserDto;
 
-import java.util.Set;
-
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
+@Transactional
 class UserServiceApplicationTests {
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.4.0");
+    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0");
     @LocalServerPort
     private Integer port;
 
@@ -33,6 +33,18 @@ class UserServiceApplicationTests {
     void setup() {
         RestAssured.baseURI = "http://localhost/api/user";
         RestAssured.port = port;
+    }
+
+    @Test
+    void shouldGetAllUser() {
+        RestAssured.when()
+                .get()
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("id[0]", equalTo(1),
+                        "login[0]", equalTo("admin"),
+                        "id[1]", equalTo(2),
+                        "login[1]", equalTo("user"));
     }
 
     @Test
@@ -48,9 +60,128 @@ class UserServiceApplicationTests {
     }
 
     @Test
+    void shouldRegisterUserWithSameLogin() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLogin("admin");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooShortLogin() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLogin("ts");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooLongLogin() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLogin("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithBlankLogin() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLogin("");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooShortFirstName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setFirstName("te");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooLongFirstName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setFirstName("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithBlankFirstName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setFirstName("");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooShortLastName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLastName("te");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooLongLastName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLastName("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithBlankLastName() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setLastName("");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithSameEmail() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setEmail("admin@lsaa.local");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooLongEmail() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setEmail("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest@lsaa.local");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithBlankEmail() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setEmail("");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithNotPatternEmail() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setEmail("test");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooShortPassword() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setPassword("test");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithTooLongPassword() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setPassword("testtesttesttesttesttesttesttesttesttesttesttesttesttest1234");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
+    void shouldRegisterUserWithBlankPassword() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        signUpForm.setPassword("");
+        shouldRegisterUserWithBadRequest(signUpForm);
+    }
+
+    @Test
     void shouldRegisterUser() {
-        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        SignUpForm signUpForm = creteTestSignUpForm(roleUserDto);
+        RoleUserDto roleUserDto = buildUserRole();
+        SignUpForm signUpForm = buildCorrectSignUpForm(roleUserDto);
         UserDto response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(signUpForm)
@@ -66,7 +197,7 @@ class UserServiceApplicationTests {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(response.getId().intValue()))
-                .body("firstName", equalTo(response.getFirstName()))
+                .body("firstName", equalTo(signUpForm.getFirstName()))
                 .body("lastName", equalTo(signUpForm.getLastName()))
                 .body("email", equalTo(signUpForm.getEmail()))
                 .body("login", equalTo(signUpForm.getLogin()))
@@ -76,36 +207,10 @@ class UserServiceApplicationTests {
     }
 
     @Test
-    void shouldRegisterUserWithSameLogin() {
-        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        SignUpForm signUpForm = new SignUpForm("admin", "admin", "admin", "adminadmin@lsaa.local", ImmutableSet.of(roleUserDto), "test1234");
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(signUpForm)
-                .when()
-                .post()
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    void shouldRegisterUserWithSameEmail() {
-        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        SignUpForm signUpForm = new SignUpForm("admin", "admin", "adminadmin", "admin@lsaa.local", ImmutableSet.of(roleUserDto), "test1234");
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(signUpForm)
-                .when()
-                .post()
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
     void shouldUpdateUser() {
         String newMail = "user-uzytkownik@lsaa.local";
-        RoleUserDto roleUserDto = RoleUserDto.builder().id(2L).code("USER").name("User").build();
-        UserDto userDto = creteUserDto(newMail, roleUserDto);
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(newMail, roleUserDto);
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(userDto)
@@ -130,12 +235,58 @@ class UserServiceApplicationTests {
                 );
     }
 
-    private static SignUpForm creteTestSignUpForm(RoleUserDto roleUserDto) {
-        Set<RoleUserDto> roles = ImmutableSet.of(roleUserDto);
-        return new SignUpForm("test", "test", "testtest", "test@test.local", roles, "test1234");
+    @Test
+    void shouldDeleteUser() {
+        int userId = 2;
+        RestAssured.given()
+                .when()
+                .delete("/{id}", userId)
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        RestAssured.when()
+                .get("/{id}", userId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    private static UserDto creteUserDto(String newMail, RoleUserDto roleUserDto) {
+    private static void shouldRegisterUserWithBadRequest(SignUpForm signUpForm) {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(signUpForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private static RoleUserDto buildUserRole() {
+        return RoleUserDto.builder().id(2L).code("USER").name("User").build();
+    }
+
+    private static SignUpForm buildTestSignUpForm() {
+        return SignUpForm.builder()
+                .firstName("test")
+                .lastName("test")
+                .login("test")
+                .email("test@test.local")
+                .role(ImmutableSet.of(buildUserRole()))
+                .password("test1234")
+                .build();
+    }
+
+    private static SignUpForm buildCorrectSignUpForm(RoleUserDto roleUserDto) {
+        return SignUpForm.builder()
+                .firstName("test")
+                .lastName("test")
+                .login("test1234")
+                .email("test1234@test.local")
+                .role(ImmutableSet.of(roleUserDto))
+                .password("test1234")
+                .build();
+    }
+
+    private static UserDto buildUpdateUserDto(String newMail, RoleUserDto roleUserDto) {
         return UserDto.builder()
                 .id(2L)
                 .login("user")

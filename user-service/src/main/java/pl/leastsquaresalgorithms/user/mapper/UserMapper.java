@@ -43,14 +43,8 @@ public class UserMapper {
     }
 
     private Boolean isAdmin(Collection<RoleUserDto> roles) {
-        for (RoleUserDto r : roles) {
-            if (r.getCode().equals(UserRole.ADMIN.getCode())) {
-                return Boolean.TRUE;
-            }
-        }
-        return Boolean.FALSE;
+        return roles.stream().map(RoleUserDto::getCode).anyMatch(UserRole.ADMIN.getCode()::equals);
     }
-
 
     public List<UserDto> buildUserDTOs(Collection<UserEntity> userEntities) {
         return userEntities.stream()

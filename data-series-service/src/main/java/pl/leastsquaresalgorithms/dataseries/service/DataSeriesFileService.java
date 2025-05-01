@@ -1,5 +1,6 @@
 package pl.leastsquaresalgorithms.dataseries.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +15,8 @@ import pl.leastsquaresalgorithms.dataseries.core.VarianceCalculate;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 import pl.leastsquaresalgorithms.dataseries.repository.DataSeriesFileRepository;
 
-
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,13 +35,22 @@ public class DataSeriesFileService {
     private final ExecutorService threadPool;
     private final FileStorageProperties fileStorageProperties;
     private final DataSeriesFileRepository dataSeriesFileRepository;
-    private final ApproximationPropertiesService approximationPropertiesService;
+//    private final ApproximationPropertiesService approximationPropertiesService;
 
-    public DataSeriesFileService(@Value("${number.threads}") int nThreads, FileStorageProperties fileStorageProperties, DataSeriesFileRepository dataSeriesFileRepository, ApproximationPropertiesService approximationPropertiesService) {
+    public DataSeriesFileService(@Value("${number.threads}") int nThreads, FileStorageProperties fileStorageProperties, DataSeriesFileRepository dataSeriesFileRepository) {
         this.dataSeriesFileRepository = dataSeriesFileRepository;
-        this.approximationPropertiesService = approximationPropertiesService;
         this.threadPool = Executors.newFixedThreadPool(nThreads);
         this.fileStorageProperties = fileStorageProperties;
+    }
+
+    public DataSeriesFileEntity crete(MultipartFile dataSeriesFile) {
+        DataSeriesFileEntity dataSeriesFileEntity = new DataSeriesFileEntity();
+        dataSeriesFileEntity.setDateSent(new Timestamp(System.currentTimeMillis()));
+        dataSeriesFileEntity.setDeleted(Boolean.FALSE);
+        dataSeriesFileEntity.setName(dataSeriesFile.getOriginalFilename());
+        dataSeriesFileEntity.setHashName(RandomStringUtils.random(100));
+        dataSeriesFileEntity.setUser(BigInteger.ONE);
+        return dataSeriesFileEntity;
     }
 
     public void readFile(BigInteger dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
@@ -82,7 +92,7 @@ public class DataSeriesFileService {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new VarianceCalculate(dataSeriesFile)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
-            logger.debug("VarianceCalculate - isDone: {}", futures.get(0).isDone());
+            logger.debug("VarianceCalculate - isDone: {}", futures.getFirst().isDone());
         } catch (InterruptedException e) {
             logger.error("{}", e.getMessage());
         }
@@ -94,7 +104,6 @@ public class DataSeriesFileService {
 
     public Optional<DataSeriesFileEntity> findByIdWithPoints(BigInteger id) {
         Optional<DataSeriesFileEntity> dataSeriesFileOptional = dataSeriesFileRepository.findById(id);
-
         dataSeriesFileOptional.ifPresent(dataSeriesFileEntity -> {
             try {
                 this.readFile(dataSeriesFileEntity.getDataSeriesFileId(), dataSeriesFileEntity);
@@ -102,18 +111,16 @@ public class DataSeriesFileService {
                 logger.error(e.getMessage(), e);
             }
         });
-
         return dataSeriesFileOptional;
     }
-
 
     public DataSeriesFileEntity save(DataSeriesFileEntity dataSeriesFileEntity) {
         return dataSeriesFileRepository.save(dataSeriesFileEntity);
     }
 
     public void delete(DataSeriesFileEntity dataSeriesFileEntity) {
-        dataSeriesFileEntity.setDeleted((byte) 1);
-        approximationPropertiesService.delete(dataSeriesFileEntity.getApproximationProperties());
+        dataSeriesFileEntity.setDeleted(Boolean.TRUE);
+//        approximationPropertiesService.delete(dataSeriesFileEntity.getApproximationProperties());
         save(dataSeriesFileEntity);
     }
 
@@ -121,7 +128,7 @@ public class DataSeriesFileService {
         return dataSeriesFileRepository.findAll();
     }
 
-    public List<DataSeriesFileEntity> findByUserAndDeleted(UserEntity userEntity, byte deleted) {
-        return dataSeriesFileRepository.findByUserAndDeleted(userEntity, deleted);
+    public List<DataSeriesFileEntity> findByUserAndDeleted(BigInteger userId, Boolean deleted) {
+        return dataSeriesFileRepository.findByUserAndDeleted(userId, deleted);
     }
 }

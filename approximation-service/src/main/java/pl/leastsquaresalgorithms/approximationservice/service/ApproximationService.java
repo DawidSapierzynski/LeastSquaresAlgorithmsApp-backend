@@ -1,7 +1,6 @@
 package pl.leastsquaresalgorithms.approximationservice.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.leastsquaresalgorithms.approximationservice.core.calculate.ApproximationCalculate;
@@ -17,10 +16,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+@Slf4j
 @Service
 public class ApproximationService {
-    private static final Logger logger = LoggerFactory.getLogger(ApproximationService.class);
-
     private final ExecutorService threadPool;
     private final MathematicalFunctionMapper mathematicalFunctionMapper;
 
@@ -34,9 +32,9 @@ public class ApproximationService {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ApproximationCalculate(chosenMethodDTO, points, approximationDTO, mathematicalFunctionMapper)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
-            logger.debug("ApproximationCalculate - isDone: {}", futures.getFirst().isDone());
+            log.debug("ApproximationCalculate - isDone: {}", futures.getFirst().isDone());
         } catch (InterruptedException e) {
-            logger.error("{}", e.getMessage(), e);
+            log.error("{}", e.getMessage(), e);
         }
         return approximationDTO;
     }

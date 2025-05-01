@@ -2,6 +2,7 @@ package pl.leastsquaresalgorithms.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.leastsquaresalgorithms.user.configuration.exception.LoginException;
 import pl.leastsquaresalgorithms.user.dto.SignUpForm;
 import pl.leastsquaresalgorithms.user.dto.UserDto;
 import pl.leastsquaresalgorithms.user.mapper.UserMapper;
@@ -26,11 +27,11 @@ public class UserService {
     }
 
     public boolean findByEmailAndLoginNot(String email, String login) {
-        return this.userRepository.findByEmailAndLoginNot(email, login).isPresent();
+        return userRepository.findByEmailAndLoginNot(email, login).isPresent();
     }
 
     public Optional<UserEntity> findByUserIdAndDeleted(Long userId, Boolean deleted) {
-        return this.userRepository.findByUserIdAndDeleted(userId, deleted);
+        return userRepository.findByUserIdAndDeleted(userId, deleted);
     }
 
     public boolean existsByLogin(String login) {
@@ -41,7 +42,13 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public UserEntity create(SignUpForm signUpRequest) {
+    public UserEntity create(SignUpForm signUpRequest) throws LoginException {
+        if (existsByLogin(signUpRequest.getLogin())) {
+            throw new LoginException("Fail - Username is already in use!");
+        }
+        if (existsByEmail(signUpRequest.getEmail())) {
+            throw new LoginException("Fail - Email is already in use!");
+        }
         UserEntity user = userMapper.buildUserEntity(signUpRequest);
         return save(user);
     }
@@ -50,8 +57,11 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    public UserEntity update(UserEntity user, UserDto userDTO) {
-        this.userMapper.updateUserEntity(user, userDTO);
+    public UserEntity update(UserEntity user, UserDto userDTO) throws LoginException {
+        if (findByEmailAndLoginNot(userDTO.getEmail(), userDTO.getLogin())) {
+            throw new LoginException("Fail - Email is already in use!");
+        }
+        userMapper.updateUserEntity(user, userDTO);
         return save(user);
     }
 

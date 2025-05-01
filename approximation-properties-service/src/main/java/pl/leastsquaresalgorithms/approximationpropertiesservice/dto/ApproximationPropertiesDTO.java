@@ -15,7 +15,6 @@ public class ApproximationPropertiesDTO {
     private BigInteger userId;
     private BigInteger dataSeriesFileId;
     private int degree;
-    private DataSeriesFileDTO dataSeriesFileDTO;
     private Timestamp dateCreate;
     private boolean deleted;
 }

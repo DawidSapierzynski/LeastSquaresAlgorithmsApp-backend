@@ -27,7 +27,7 @@ public class DataSeriesFileEntity {
     @Column(name = "date_sent")
     private Timestamp dateSent;
     @Column(name = "deleted")
-    private Byte deleted = (byte) 0;
+    private Boolean deleted = Boolean.FALSE;
     @Column(name = "user_id")
     private BigInteger user;
     @Column(name = "size")

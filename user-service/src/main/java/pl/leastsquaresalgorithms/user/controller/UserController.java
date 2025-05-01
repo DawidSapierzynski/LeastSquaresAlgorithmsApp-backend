@@ -31,19 +31,18 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAll() {
         List<UserEntity> userEntities = userService.getAll();
         List<UserDto> userDtos = userMapper.buildUserDTOs(userEntities);
-
         log.debug("Getting all users successfully completed. Size: {}", userDtos.size());
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable("userId") Long userId) throws ResourceNotFoundException, ForbiddenException {
-        UserEntity userEntities = userService.findByUserIdAndDeleted(userId, Boolean.FALSE)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
 //        UserEntity loggedUser = userService.getLoggedUser();
-//        if (!(Objects.equals(loggedUser.getUserId(), userId) || loggedUser.isAdmin())) {
+//        if (!(Objects.equals(loggedUser.getUserId(), userId) || loggedUser.getAdmin())) {
 //            throw new ForbiddenException("No permission to open this user details");
 //        }
+        UserEntity userEntities = userService.findByUserIdAndDeleted(userId, Boolean.FALSE)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
         UserDto userDTO = userMapper.buildUserDTO(userEntities);
         log.debug("Get user successfully completed. Id: {}", userDTO.getId());
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -52,12 +51,6 @@ public class UserController {
     @Transactional
     @PostMapping
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody SignUpForm signUpRequest) throws LoginException {
-        if (userService.existsByLogin(signUpRequest.getLogin())) {
-            throw new LoginException("Fail - Username is already taken!");
-        }
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            throw new LoginException("Fail - Email is already in use!");
-        }
         UserEntity user = userService.create(signUpRequest);
         UserDto userDto = userMapper.buildUserDTO(user);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
@@ -65,12 +58,9 @@ public class UserController {
 
     @Transactional
     @PutMapping(value = "/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable(value = "userId") Long userId, @RequestBody UserDto userDTO) throws ResourceNotFoundException, LoginException {
+    public ResponseEntity<UserDto> updateUser(@PathVariable(value = "userId") Long userId, @Valid @RequestBody UserDto userDTO) throws ResourceNotFoundException, LoginException {
         UserEntity user = userService.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for this id: " + userId));
-        if (userService.findByEmailAndLoginNot(userDTO.getEmail(), userDTO.getLogin())) {
-            throw new LoginException("Fail - Email is already in use!");
-        }
         user = userService.update(user, userDTO);
         log.debug("Updated user with id: {}", userId);
         return new ResponseEntity<>(userMapper.buildUserDTO(user), HttpStatus.OK);
