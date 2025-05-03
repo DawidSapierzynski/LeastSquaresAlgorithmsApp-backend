@@ -13,7 +13,7 @@ import pl.leastsquaresalgorithms.approximationservice.service.ChooseMethodServic
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/doApproximations")
+@RequestMapping(value = "/approximation")
 @RequiredArgsConstructor
 @Slf4j
 public class ApproximationController {

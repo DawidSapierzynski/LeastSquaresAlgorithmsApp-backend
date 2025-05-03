@@ -4,7 +4,7 @@ import Jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.leastsquaresalgorithms.approximationservice.core.function.polynomials.AlgebraicPolynomial;
-import pl.edu.wat.wcy.isi.app.model.PointXY;
+import pl.leastsquaresalgorithms.approximationservice.dto.PointXY;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @Transactional
-class UserServiceApplicationTests {
+class UserControllerTests {
     @Container
     @ServiceConnection
     private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0");
@@ -36,7 +36,7 @@ class UserServiceApplicationTests {
     }
 
     @Test
-    void shouldGetAllUser() {
+    void shouldGetAllUsers() {
         RestAssured.when()
                 .get()
                 .then()
@@ -57,6 +57,34 @@ class UserServiceApplicationTests {
                         "login", equalTo("admin"),
                         "rolesUserDto[0].code", equalTo("ADMIN")
                 );
+    }
+
+    @Test
+    void shouldRegisterUser() {
+        SignUpForm signUpForm = buildTestSignUpForm();
+        RoleUserDto roleUserDto = signUpForm.getRole().stream().findFirst().orElseThrow();
+        UserDto response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(signUpForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(UserDto.class);
+
+        RestAssured.when()
+                .get("/{id}", response.getId())
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(response.getId().intValue()))
+                .body("firstName", equalTo(signUpForm.getFirstName()))
+                .body("lastName", equalTo(signUpForm.getLastName()))
+                .body("email", equalTo(signUpForm.getEmail()))
+                .body("login", equalTo(signUpForm.getLogin()))
+                .body("rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()))
+                .body("rolesUserDto[0].code", equalTo(roleUserDto.getCode()))
+                .body("rolesUserDto[0].name", equalTo(roleUserDto.getName()));
     }
 
     @Test
@@ -151,7 +179,7 @@ class UserServiceApplicationTests {
     }
 
     @Test
-    void shouldRegisterUserWithNotPatternEmail() {
+    void shouldRegisterUserWithBadPatternEmail() {
         SignUpForm signUpForm = buildTestSignUpForm();
         signUpForm.setEmail("test");
         shouldRegisterUserWithBadRequest(signUpForm);
@@ -179,38 +207,10 @@ class UserServiceApplicationTests {
     }
 
     @Test
-    void shouldRegisterUser() {
-        RoleUserDto roleUserDto = buildUserRole();
-        SignUpForm signUpForm = buildCorrectSignUpForm(roleUserDto);
-        UserDto response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(signUpForm)
-                .when()
-                .post()
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract()
-                .as(UserDto.class);
-
-        RestAssured.when()
-                .get("/{id}", response.getId())
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(response.getId().intValue()))
-                .body("firstName", equalTo(signUpForm.getFirstName()))
-                .body("lastName", equalTo(signUpForm.getLastName()))
-                .body("email", equalTo(signUpForm.getEmail()))
-                .body("login", equalTo(signUpForm.getLogin()))
-                .body("rolesUserDto[0].id", equalTo(roleUserDto.getId().intValue()))
-                .body("rolesUserDto[0].code", equalTo(roleUserDto.getCode()))
-                .body("rolesUserDto[0].name", equalTo(roleUserDto.getName()));
-    }
-
-    @Test
     void shouldUpdateUser() {
-        String newMail = "user-uzytkownik@lsaa.local";
         RoleUserDto roleUserDto = buildUserRole();
-        UserDto userDto = buildUpdateUserDto(newMail, roleUserDto);
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("user-uzytkownik@lsaa.local");
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(userDto)
@@ -218,7 +218,7 @@ class UserServiceApplicationTests {
                 .put("/{id}", userDto.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("email", equalTo(newMail));
+                .body("email", equalTo(userDto.getEmail()));
 
         RestAssured.when()
                 .get("/{id}", userDto.getId())
@@ -233,6 +233,174 @@ class UserServiceApplicationTests {
                 .body("rolesUserDto[0].code", equalTo(roleUserDto.getCode()))
                 .body("rolesUserDto[0].name", equalTo(roleUserDto.getName())
                 );
+    }
+
+    @Test
+    void shouldUpdateUserWithTooShortLogin() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("us");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooLongLogin() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithBlankLogin() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooShortFirstName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setFirstName("us");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooLongFirstName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setFirstName("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithBlankFirstName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setFirstName("");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooShortLastName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setLastName("us");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooLongLastName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setLastName("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithBlankLastName() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setLastName("");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithTooLongEmail() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest@lsaa.local");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithBlankEmail() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldUpdateUserWithBadPatternEmail() {
+        RoleUserDto roleUserDto = buildUserRole();
+        UserDto userDto = buildUpdateUserDto(roleUserDto);
+        userDto.setEmail("user@");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userDto)
+                .when()
+                .put("/{id}", userDto.getId())
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -275,24 +443,13 @@ class UserServiceApplicationTests {
                 .build();
     }
 
-    private static SignUpForm buildCorrectSignUpForm(RoleUserDto roleUserDto) {
-        return SignUpForm.builder()
-                .firstName("test")
-                .lastName("test")
-                .login("test1234")
-                .email("test1234@test.local")
-                .role(ImmutableSet.of(roleUserDto))
-                .password("test1234")
-                .build();
-    }
-
-    private static UserDto buildUpdateUserDto(String newMail, RoleUserDto roleUserDto) {
+    private static UserDto buildUpdateUserDto(RoleUserDto roleUserDto) {
         return UserDto.builder()
                 .id(2L)
                 .login("user")
                 .firstName("User")
                 .lastName("Użytkownik")
-                .email(newMail)
+                .email("user@lsaa.local")
                 .rolesUserDto(ImmutableSet.of(roleUserDto))
                 .deleted(false)
                 .admin(false)

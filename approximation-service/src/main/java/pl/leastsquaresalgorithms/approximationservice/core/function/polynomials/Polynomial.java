@@ -1,5 +1,6 @@
 package pl.leastsquaresalgorithms.approximationservice.core.function.polynomials;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
 public abstract class Polynomial {
     private final Logger logger = LoggerFactory.getLogger(Polynomial.class);
 
@@ -21,7 +24,7 @@ public abstract class Polynomial {
     private int degree;
 
     public static boolean isEmpty(Polynomial polynomial) {
-        return polynomial == null || polynomial.getCoefficients() == null || polynomial.getCoefficients().size() == 0;
+        return polynomial == null || polynomial.getCoefficients() == null || polynomial.getCoefficients().isEmpty();
     }
 
     public static boolean isNotEmpty(Polynomial polynomial) {
@@ -50,7 +53,7 @@ public abstract class Polynomial {
         int sizeThis = this.getCoefficients().size() - 1;
         int sizeThat = polynomial.getCoefficients().size() - 1;
 
-        if (isNotEmpty(polynomial) && coefficients != null) {
+        if (isNotEmpty(polynomial)) {
             List<Double> maxCoefficients = polynomial.getDegree() > getDegree() ? polynomial.getCoefficients() : this.getCoefficients();
             int minSize = Math.min(sizeThis, sizeThat);
             int maxSize = Math.max(sizeThis, sizeThat);
@@ -65,7 +68,8 @@ public abstract class Polynomial {
 
             try {
                 return polynomialClass.getDeclaredConstructor(List.class).newInstance(result);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
                 logger.error("{}", e.getMessage());
             }
         } else {
@@ -80,7 +84,7 @@ public abstract class Polynomial {
         int sizeThis = this.getCoefficients().size() - 1;
         int sizeThat = polynomial.getCoefficients().size() - 1;
 
-        if (isNotEmpty(polynomial) && coefficients != null) {
+        if (isNotEmpty(polynomial)) {
             int minSize = Math.min(sizeThis, sizeThat);
             result = new ArrayList<>();
 
@@ -100,7 +104,8 @@ public abstract class Polynomial {
 
             try {
                 return polynomialClass.getDeclaredConstructor(List.class).newInstance(result);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
                 logger.error("{}", e.getMessage(), e);
             }
         } else {
@@ -113,7 +118,7 @@ public abstract class Polynomial {
         List<Double> result = new ArrayList<>();
         List<Double> coefficients = getCoefficients();
 
-        result.add(coefficients.get(0) + value);
+        result.add(coefficients.getFirst() + value);
 
         for (int i = 1; i <= getDegree(); i++) {
             result.add(coefficients.get(i));
@@ -121,7 +126,8 @@ public abstract class Polynomial {
 
         try {
             return polynomialClass.getDeclaredConstructor(List.class).newInstance(result);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             logger.error("{}", e.getMessage(), e);
         }
         return null;
@@ -131,16 +137,8 @@ public abstract class Polynomial {
         return plus(-value, polynomialClass);
     }
 
-    public int getDegree() {
-        return degree;
-    }
-
     protected void setDegree(int degree) {
         this.degree = degree;
-    }
-
-    public List<Double> getCoefficients() {
-        return coefficients;
     }
 
     public abstract double evaluate(double x);

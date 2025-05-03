@@ -22,7 +22,7 @@ public class TrigonometricPolynomial extends Polynomial {
         List<Double> coefficients = this.getCoefficients();
 
         if (!coefficients.isEmpty()) {
-            result += 0.5 * coefficients.get(0);
+            result += 0.5 * coefficients.getFirst();
             for (int i = 1; i < coefficients.size() / 2.0; i++) {
                 result += coefficients.get(2 * i - 1) * Math.cos(i * x);
                 result += coefficients.get(2 * i) * Math.sin(i * x);
@@ -73,7 +73,7 @@ public class TrigonometricPolynomial extends Polynomial {
         StringBuilder stringBuilder = new StringBuilder("TrigonometricPolynomial: ");
 
         if (!coefficients.isEmpty()) {
-            stringBuilder.append(coefficients.get(0)).append("*").append(0.5);
+            stringBuilder.append(coefficients.getFirst()).append("*").append(0.5);
             for (int i = 1; i < coefficients.size() / 2.0; i++) {
                 stringBuilder.append(" + ").append(coefficients.get(2 * i - 1)).append("*cos(").append(i).append("x").append(")");
                 stringBuilder.append(" + ").append(coefficients.get(2 * i)).append("*sin(").append(i).append("x").append(")");
