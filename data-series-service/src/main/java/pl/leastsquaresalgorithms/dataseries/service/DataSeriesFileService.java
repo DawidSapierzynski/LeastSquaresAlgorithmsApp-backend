@@ -1,6 +1,5 @@
 package pl.leastsquaresalgorithms.dataseries.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +19,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +29,7 @@ import java.util.concurrent.Future;
 public class DataSeriesFileService {
     public static final String FILE_EXTENSION = ".csv";
     private static final int MAX_NUMBER_POINTS = 10000;
-    private static final int MIN_NUMBER_POINTS = 5;
+    private static final int MIN_NUMBER_POINTS = 2;
     private static final Logger logger = LoggerFactory.getLogger(DataSeriesFileService.class);
 
     private final ExecutorService threadPool;
@@ -43,13 +43,13 @@ public class DataSeriesFileService {
         this.fileStorageProperties = fileStorageProperties;
     }
 
-    public DataSeriesFileEntity crete(MultipartFile dataSeriesFile) {
+    public DataSeriesFileEntity buildEntity(MultipartFile dataSeriesFile) {
         DataSeriesFileEntity dataSeriesFileEntity = new DataSeriesFileEntity();
         dataSeriesFileEntity.setDateSent(new Timestamp(System.currentTimeMillis()));
         dataSeriesFileEntity.setDeleted(Boolean.FALSE);
         dataSeriesFileEntity.setName(dataSeriesFile.getOriginalFilename());
-        dataSeriesFileEntity.setHashName(RandomStringUtils.random(100));
-        dataSeriesFileEntity.setUser(BigInteger.ONE);
+        dataSeriesFileEntity.setHashName(UUID.randomUUID().toString());
+        dataSeriesFileEntity.setUserId(BigInteger.ONE);
         return dataSeriesFileEntity;
     }
 
@@ -129,6 +129,6 @@ public class DataSeriesFileService {
     }
 
     public List<DataSeriesFileEntity> findByUserAndDeleted(BigInteger userId, Boolean deleted) {
-        return dataSeriesFileRepository.findByUserAndDeleted(userId, deleted);
+        return dataSeriesFileRepository.findByUserIdAndDeleted(userId, deleted);
     }
 }

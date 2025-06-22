@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface DataSeriesFileRepository extends JpaRepository<DataSeriesFileEntity, BigInteger> {
-    List<DataSeriesFileEntity> findByUserAndDeleted(BigInteger userId, Boolean deleted);
+    List<DataSeriesFileEntity> findByUserIdAndDeleted(BigInteger userId, Boolean deleted);
 }

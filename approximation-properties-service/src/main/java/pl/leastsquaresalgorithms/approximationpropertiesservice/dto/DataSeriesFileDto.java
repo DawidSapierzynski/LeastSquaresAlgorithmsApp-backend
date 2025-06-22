@@ -1,4 +1,4 @@
-package pl.leastsquaresalgorithms.dataseries.dto;
+package pl.leastsquaresalgorithms.approximationpropertiesservice.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class DataSeriesFileDTO {
+public class DataSeriesFileDto {
     private BigInteger id;
     private BigInteger userId;
     private String name;

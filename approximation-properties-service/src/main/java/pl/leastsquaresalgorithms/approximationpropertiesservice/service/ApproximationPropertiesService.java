@@ -21,7 +21,7 @@ public class ApproximationPropertiesService {
         return approximationPropertiesRepository.save(approximationPropertiesEntity);
     }
 
-    public List<ApproximationPropertiesEntity> findByUserAndDeleted(BigInteger userId, byte deleted) {
+    public List<ApproximationPropertiesEntity> findByUserAndDeleted(BigInteger userId, Boolean deleted) {
         return approximationPropertiesRepository.findByUserIdAndDeleted(userId, deleted);
     }
 
@@ -33,12 +33,12 @@ public class ApproximationPropertiesService {
         return approximationPropertiesRepository.findById(id);
     }
 
-    public Optional<ApproximationPropertiesEntity> findByIdAndDeleted(BigInteger id, byte deleted) {
+    public Optional<ApproximationPropertiesEntity> findByIdAndDeleted(BigInteger id, Boolean deleted) {
         return approximationPropertiesRepository.findByApproximationPropertiesIdAndDeleted(id, deleted);
     }
 
     public void delete(ApproximationPropertiesEntity approximationProperties) {
-        approximationProperties.setDeleted((byte) 1);
+        approximationProperties.setDeleted(true);
         save(approximationProperties);
     }
 

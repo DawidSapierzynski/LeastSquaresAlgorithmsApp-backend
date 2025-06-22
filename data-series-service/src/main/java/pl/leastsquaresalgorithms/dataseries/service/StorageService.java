@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.wat.wcy.isi.app.configuration.FileStorageProperties;
-import pl.edu.wat.wcy.isi.app.configuration.exception.ResourceNotFoundException;
+import pl.leastsquaresalgorithms.dataseries.configuration.FileStorageProperties;
+import pl.leastsquaresalgorithms.dataseries.configuration.exception.ResourceNotFoundException;
 
 import java.io.File;
 import java.io.IOException;

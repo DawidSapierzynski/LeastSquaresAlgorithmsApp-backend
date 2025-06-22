@@ -29,16 +29,16 @@ public class DataSeriesFileEntity {
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
     @Column(name = "user_id")
-    private BigInteger user;
+    private BigInteger userId;
     @Column(name = "size")
     private Integer size;
     @Column(name = "variance")
     private Double variance;
     @Column(name = "standard_deviation")
     private Double standardDeviation;
+    @Transient
     private List<PointXY> points;
 
-    @Transient
     public synchronized List<PointXY> getPoints() {
         return points;
     }

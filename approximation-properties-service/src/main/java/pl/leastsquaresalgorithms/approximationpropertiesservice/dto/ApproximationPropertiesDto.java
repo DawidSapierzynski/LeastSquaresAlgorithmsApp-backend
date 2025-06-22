@@ -10,10 +10,10 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Builder
-public class ApproximationPropertiesDTO {
+public class ApproximationPropertiesDto {
     private BigInteger id;
     private BigInteger userId;
-    private BigInteger dataSeriesFileId;
+    private DataSeriesFileDto dataSeriesFile;
     private int degree;
     private Timestamp dateCreate;
     private boolean deleted;

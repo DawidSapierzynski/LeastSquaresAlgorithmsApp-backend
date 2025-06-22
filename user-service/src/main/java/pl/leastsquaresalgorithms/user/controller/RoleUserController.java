@@ -13,7 +13,7 @@ import pl.leastsquaresalgorithms.user.service.RoleUserService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/roleUser")
+@RequestMapping(value = "/role-user")
 public class RoleUserController {
     private final RoleUserService roleUserService;
     private final RoleUserMapper roleUserMapper;

@@ -27,7 +27,7 @@ public class ApproximationPropertiesEntity {
 
     @Basic
     @Column(name = "is_deleted")
-    private Byte deleted = (byte) 0;
+    private Boolean deleted = Boolean.FALSE;
 
     @Basic
     @Column(name = "data_series_file_id")

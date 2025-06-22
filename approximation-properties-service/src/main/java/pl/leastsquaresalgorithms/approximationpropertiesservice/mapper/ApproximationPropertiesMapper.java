@@ -2,7 +2,8 @@ package pl.leastsquaresalgorithms.approximationpropertiesservice.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.leastsquaresalgorithms.approximationpropertiesservice.dto.ApproximationPropertiesDTO;
+import pl.leastsquaresalgorithms.approximationpropertiesservice.dto.ApproximationPropertiesDto;
+import pl.leastsquaresalgorithms.approximationpropertiesservice.dto.DataSeriesFileDto;
 import pl.leastsquaresalgorithms.approximationpropertiesservice.model.ApproximationPropertiesEntity;
 
 import java.util.Collection;
@@ -12,20 +13,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ApproximationPropertiesMapper {
-    public List<ApproximationPropertiesDTO> buildApproximationPropertiesDTOs(Collection<ApproximationPropertiesEntity> approximationProperties) {
+    public List<ApproximationPropertiesDto> buildApproximationPropertiesDTOs(Collection<ApproximationPropertiesEntity> approximationProperties) {
         return approximationProperties.stream()
-                .map(this::buildApproximationPropertiesDTO)
+                .map(entity -> buildApproximationPropertiesDTO(entity, null))
                 .collect(Collectors.toList());
     }
 
-    public ApproximationPropertiesDTO buildApproximationPropertiesDTO(ApproximationPropertiesEntity approximationProperties) {
-        return ApproximationPropertiesDTO.builder()
+    public ApproximationPropertiesDto buildApproximationPropertiesDTO(ApproximationPropertiesEntity approximationProperties, DataSeriesFileDto dataSeriesFileDto) {
+        return ApproximationPropertiesDto.builder()
                 .id(approximationProperties.getApproximationPropertiesId())
                 .userId(approximationProperties.getUserId())
-                .dataSeriesFileId(approximationProperties.getDataSeriesFileId())
+                .dataSeriesFile(dataSeriesFileDto)
                 .degree(approximationProperties.getDegreeApproximation())
                 .dateCreate(approximationProperties.getDateCreate())
-                .deleted(approximationProperties.getDeleted().equals((byte) 1))
+                .deleted(Boolean.TRUE.equals(approximationProperties.getDeleted()))
                 .build();
     }
 }

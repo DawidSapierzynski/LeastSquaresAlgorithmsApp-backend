@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApproximationControllerTests {
-    public static final double DELTA = 1.0e-10;
+    public static final double DELTA = 1.0e-12;
     @LocalServerPort
     private Integer port;
 

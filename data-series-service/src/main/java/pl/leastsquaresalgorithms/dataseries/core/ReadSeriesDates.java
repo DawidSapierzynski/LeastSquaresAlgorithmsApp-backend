@@ -16,7 +16,7 @@ public abstract class ReadSeriesDates implements Runnable {
         this.dataSeriesFile = dataSeriesFile;
     }
 
-    protected static void parseLine(List<PointXY> points, String line, String[] split, Logger logger) {
+    protected static void parseLine(List<PointXY> points, String line, String[] split, Logger log) {
         line = line.trim();
         if (line.startsWith("//"))
             return;
@@ -29,7 +29,7 @@ public abstract class ReadSeriesDates implements Runnable {
 
             PointXY pointXY = new PointXY(x, y);
             points.add(pointXY);
-            logger.debug("Add point: {}", pointXY);
+            log.trace("Add point: {}", pointXY);
         } else if (split.length == 3) {
             double x, y, weight;
 
@@ -39,9 +39,9 @@ public abstract class ReadSeriesDates implements Runnable {
 
             PointXY pointXY = new PointXY(x, y, weight);
             points.add(pointXY);
-            logger.debug("Add point: {}", pointXY);
+            log.trace("Add point: {}", pointXY);
         } else {
-            logger.error("Not parse line: {}", line);
+            log.error("Not parse line: {}", line);
         }
     }
 

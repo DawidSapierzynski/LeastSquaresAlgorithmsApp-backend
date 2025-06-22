@@ -1,7 +1,6 @@
 package pl.leastsquaresalgorithms.dataseries.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import pl.leastsquaresalgorithms.dataseries.configuration.FileStorageProperties;
 import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
@@ -13,9 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+@Slf4j
 public class ReadSeriesDatesFromFile extends ReadSeriesDates {
-    private final Logger logger = LoggerFactory.getLogger(ReadSeriesDatesFromFile.class);
-
     private final String seriesDatesPath;
     private final String seriesDatesName;
 
@@ -32,7 +30,7 @@ public class ReadSeriesDatesFromFile extends ReadSeriesDates {
         this.dataSeriesFile.setPoints(points);
         this.dataSeriesFile.setSize(points.size());
 
-        logger.debug("The file was read correctly: {}", seriesDatesName);
+        log.debug("The file was read correctly: {}", seriesDatesName);
     }
 
     private List<PointXY> getPoints(String seriesDatesPath) {
@@ -42,15 +40,15 @@ public class ReadSeriesDatesFromFile extends ReadSeriesDates {
 
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
-                parseLine(points, line, line.split(REGEX_SPLIT), logger);
+                parseLine(points, line, line.split(REGEX_SPLIT), log);
             }
 
             Collections.sort(points);
         } catch (FileNotFoundException | NumberFormatException e) {
-            logger.error("{}", e.getMessage());
+            log.error("{}", e.getMessage());
         }
 
-        logger.info("Points have been loaded.");
+        log.info("Points have been loaded.");
         return points;
     }
 }

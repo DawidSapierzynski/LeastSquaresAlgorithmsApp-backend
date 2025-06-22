@@ -29,12 +29,12 @@
         <mysql-connector-java.version>9.3.0</mysql-connector-java.version>
         <lombok.version>1.18.38</lombok.version>
         <jjwt.version>0.12.6</jjwt.version>
-        <liquibase-core.version>4.31.1</liquibase-core.version>
+        <liquibase-core.version>4.32.0</liquibase-core.version>
         <validation-api.version>3.1.1</validation-api.version>
         <jama.version>1.0.3</jama.version>
         <json-path.version>2.9.0</json-path.version>
-        <junit-jupiter.version>5.12.2</junit-jupiter.version>
-        <rest-assured.version>5.5.1</rest-assured.version>
+        <junit-jupiter.version>5.13.1</junit-jupiter.version>
+        <rest-assured.version>5.5.5</rest-assured.version>
         <hamcrest.version>3.0</hamcrest.version>
     </properties>
 
@@ -46,6 +46,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
