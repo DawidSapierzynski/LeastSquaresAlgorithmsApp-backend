@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -12,8 +11,8 @@ import java.util.List;
 @Setter
 @Builder
 public class DataSeriesFileDto {
-    private BigInteger id;
-    private BigInteger userId;
+    private Long id;
+    private Long userId;
     private String name;
     private String hashName;
     private Timestamp dateSent;

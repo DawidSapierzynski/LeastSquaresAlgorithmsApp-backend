@@ -8,6 +8,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Repository
-public interface DataSeriesFileRepository extends JpaRepository<DataSeriesFileEntity, BigInteger> {
-    List<DataSeriesFileEntity> findByUserIdAndDeleted(BigInteger userId, Boolean deleted);
+public interface DataSeriesFileRepository extends JpaRepository<DataSeriesFileEntity, Long> {
+    List<DataSeriesFileEntity> findByUserIdAndDeleted(Long userId, Boolean deleted);
 }

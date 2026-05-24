@@ -11,8 +11,8 @@ import java.sql.Timestamp;
 @Setter
 @Builder
 public class ApproximationPropertiesDto {
-    private BigInteger id;
-    private BigInteger userId;
+    private Long id;
+    private Long userId;
     private DataSeriesFileDto dataSeriesFile;
     private int degree;
     private Timestamp dateCreate;

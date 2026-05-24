@@ -19,7 +19,7 @@ public class DataSeriesFileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "data_series_file_id")
-    private BigInteger dataSeriesFileId;
+    private Long dataSeriesFileId;
     @Column
     private String name;
     @Column(name = "hash_name")
@@ -29,7 +29,7 @@ public class DataSeriesFileEntity {
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
     @Column(name = "user_id")
-    private BigInteger userId;
+    private Long userId;
     @Column(name = "size")
     private Integer size;
     @Column(name = "variance")

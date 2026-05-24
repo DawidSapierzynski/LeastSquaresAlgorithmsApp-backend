@@ -9,6 +9,6 @@ import java.math.BigInteger;
 public interface DataSeriesFileClient {
 
     @GetExchange("/data-series-file/{dataSeriesFileId}")
-    DataSeriesFileDto getDataSeriesFile(@PathVariable(value = "dataSeriesFileId") BigInteger dataSeriesFileId);
+    DataSeriesFileDto getDataSeriesFile(@PathVariable Long dataSeriesFileId);
 
 }

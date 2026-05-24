@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 class UserControllerTests {
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0");
+    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.4.0");
     @LocalServerPort
     private Integer port;
 

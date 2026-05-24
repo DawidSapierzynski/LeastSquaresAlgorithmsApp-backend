@@ -3,18 +3,20 @@ package pl.leastsquaresalgorithms.dataseries;
 import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.specification.MultiPartSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.leastsquaresalgorithms.dataseries.dto.DataSeriesFileDto;
 import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
+import pl.leastsquaresalgorithms.dataseries.repository.DataSeriesFileRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -24,19 +26,26 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-@Transactional
 class DataSeriesFileControllerTests {
     public static final double DELTA = 1.0e-12;
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0");
+    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.4.0");
     @LocalServerPort
     private Integer port;
+    @Autowired
+    private DataSeriesFileRepository dataSeriesFileRepository;
 
     @BeforeEach
     void setup() {
-        RestAssured.baseURI = "http://localhost/api/dataSeriesFile";
+        dataSeriesFileRepository.deleteAllInBatch();
+        RestAssured.baseURI = "http://localhost/api/data-series-file";
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void cleanup() {
+        dataSeriesFileRepository.deleteAllInBatch();
     }
 
     @Test

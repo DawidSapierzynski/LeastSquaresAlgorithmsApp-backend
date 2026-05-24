@@ -49,11 +49,11 @@ public class DataSeriesFileService {
         dataSeriesFileEntity.setDeleted(Boolean.FALSE);
         dataSeriesFileEntity.setName(dataSeriesFile.getOriginalFilename());
         dataSeriesFileEntity.setHashName(UUID.randomUUID().toString());
-        dataSeriesFileEntity.setUserId(BigInteger.ONE);
+        dataSeriesFileEntity.setUserId(1L);
         return dataSeriesFileEntity;
     }
 
-    public void readFile(BigInteger dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
+    public void readFile(Long dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
         List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromFile(dateSeriesFileId.toString() + DataSeriesFileService.FILE_EXTENSION, dataSeriesFileEntity, fileStorageProperties)));
         try {
             List<Future<Object>> futures = this.threadPool.invokeAll(callables);
@@ -98,11 +98,11 @@ public class DataSeriesFileService {
         }
     }
 
-    public Optional<DataSeriesFileEntity> findById(BigInteger id) {
+    public Optional<DataSeriesFileEntity> findById(Long id) {
         return dataSeriesFileRepository.findById(id);
     }
 
-    public Optional<DataSeriesFileEntity> findByIdWithPoints(BigInteger id) {
+    public Optional<DataSeriesFileEntity> findByIdWithPoints(Long id) {
         Optional<DataSeriesFileEntity> dataSeriesFileOptional = dataSeriesFileRepository.findById(id);
         dataSeriesFileOptional.ifPresent(dataSeriesFileEntity -> {
             try {
@@ -128,7 +128,7 @@ public class DataSeriesFileService {
         return dataSeriesFileRepository.findAll();
     }
 
-    public List<DataSeriesFileEntity> findByUserAndDeleted(BigInteger userId, Boolean deleted) {
+    public List<DataSeriesFileEntity> findByUserAndDeleted(Long userId, Boolean deleted) {
         return dataSeriesFileRepository.findByUserIdAndDeleted(userId, deleted);
     }
 }

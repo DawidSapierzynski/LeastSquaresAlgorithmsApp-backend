@@ -16,7 +16,6 @@ import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 import pl.leastsquaresalgorithms.dataseries.service.DataSeriesFileService;
 import pl.leastsquaresalgorithms.dataseries.service.StorageService;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -37,14 +36,14 @@ public class DataSeriesFileController {
     @GetMapping
     public ResponseEntity<List<DataSeriesFileDto>> getAll() {
 //        UserEntity userEntity = userService.getLoggedUser();
-        List<DataSeriesFileEntity> dataSeriesFileEntities = dataSeriesFileService.findByUserAndDeleted(BigInteger.ONE, Boolean.FALSE);
+        List<DataSeriesFileEntity> dataSeriesFileEntities = dataSeriesFileService.findAll();
         List<DataSeriesFileDto> dataSeriesFileDtos = dataSeriesFileMapper.buildDataSeriesFileDTOs(dataSeriesFileEntities);
         logger.debug("Getting all (for user) the files successfully completed. Size: {}", dataSeriesFileDtos.size());
         return ResponseEntity.ok(dataSeriesFileDtos);
     }
 
     @GetMapping("/{dataSeriesFileId}")
-    public ResponseEntity<DataSeriesFileDto> getDataSeriesFile(@PathVariable(value = "dataSeriesFileId") BigInteger dataSeriesFileId) throws ResourceNotFoundException {
+    public ResponseEntity<DataSeriesFileDto> getDataSeriesFile(@PathVariable Long dataSeriesFileId) throws ResourceNotFoundException {
 //        UserEntity userEntity = userService.getLoggedUser();
         DataSeriesFileEntity dataSeriesFileEntity = dataSeriesFileService.findByIdWithPoints(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("DataSeriesFileEntity not found for this id: " + dataSeriesFileId));
@@ -55,7 +54,7 @@ public class DataSeriesFileController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity<DataSeriesFileDto> uploadDataSeriesFile(@RequestParam("dataSeriesFile") MultipartFile dataSeriesFile) throws SizeException {
+    public DataSeriesFileDto uploadDataSeriesFile(@RequestParam("dataSeriesFile") MultipartFile dataSeriesFile) throws SizeException {
         DataSeriesFileEntity dataSeriesFileEntity = dataSeriesFileService.buildEntity(dataSeriesFile);
         dataSeriesFileService.readMultipartFile(dataSeriesFile, dataSeriesFileEntity);
         dataSeriesFileService.propertiesCalculate(dataSeriesFileEntity);
@@ -63,13 +62,13 @@ public class DataSeriesFileController {
         storageService.store(dataSeriesFile, dataSeriesFileEntity.getDataSeriesFileId() + DataSeriesFileService.FILE_EXTENSION);
         DataSeriesFileDto dataSeriesFileDTO = dataSeriesFileMapper.buildDataSeriesFileDTO(dataSeriesFileEntity);
         logger.debug("The file was successfully added.");
-        return ResponseEntity.ok(dataSeriesFileDTO);
+        return dataSeriesFileDTO;
     }
 
 
     @Transactional
     @DeleteMapping("/{dataSeriesFileId}")
-    public ResponseEntity<ResponseMessage> deletedDataSeriesFile(@PathVariable(value = "dataSeriesFileId") BigInteger dataSeriesFileId) throws ResourceNotFoundException, ForbiddenException {
+    public ResponseMessage deletedDataSeriesFile(@PathVariable Long dataSeriesFileId) throws ResourceNotFoundException, ForbiddenException {
         DataSeriesFileEntity dataSeriesFile = dataSeriesFileService.findById(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("DataSeriesFileEntity not found for this id: " + dataSeriesFileId));
 //        UserEntity loggedUser = userService.getLoggedUser();
@@ -79,6 +78,6 @@ public class DataSeriesFileController {
         this.dataSeriesFileService.delete(dataSeriesFile);
         this.storageService.deleteFile(dataSeriesFile.getDataSeriesFileId() + DataSeriesFileService.FILE_EXTENSION);
         logger.debug("Deleted data series file with id: {}", dataSeriesFileId);
-        return ResponseEntity.ok(new ResponseMessage("Deleted data series file with id: " + dataSeriesFileId));
+        return new ResponseMessage("Deleted data series file with id: " + dataSeriesFileId);
     }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 
 @Data
@@ -15,7 +14,7 @@ public class ApproximationPropertiesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "approximation_properties_id")
-    private BigInteger approximationPropertiesId;
+    private Long approximationPropertiesId;
 
     @Basic
     @Column(name = "degree_approximation")
@@ -31,9 +30,9 @@ public class ApproximationPropertiesEntity {
 
     @Basic
     @Column(name = "data_series_file_id")
-    private BigInteger dataSeriesFileId;
+    private Long dataSeriesFileId;
 
     @Basic
     @Column(name = "user_id")
-    private BigInteger userId;
+    private Long userId;
 }
