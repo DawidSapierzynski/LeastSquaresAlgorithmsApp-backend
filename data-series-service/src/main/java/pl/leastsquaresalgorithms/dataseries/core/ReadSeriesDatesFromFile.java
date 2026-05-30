@@ -1,8 +1,8 @@
 package pl.leastsquaresalgorithms.dataseries.core;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.least_squares_algorithms.core.PointXY;
 import pl.leastsquaresalgorithms.dataseries.configuration.FileStorageProperties;
-import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 
 import java.io.File;

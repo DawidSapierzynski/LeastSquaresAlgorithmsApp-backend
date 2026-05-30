@@ -2,7 +2,7 @@ package pl.leastsquaresalgorithms.dataseries.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
-import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
+import pl.least_squares_algorithms.core.PointXY;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 
 import java.io.BufferedReader;

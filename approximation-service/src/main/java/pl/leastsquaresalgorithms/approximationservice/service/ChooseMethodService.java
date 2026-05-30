@@ -3,8 +3,8 @@ package pl.leastsquaresalgorithms.approximationservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.leastsquaresalgorithms.approximationservice.core.LeastSquaresMethod;
-import pl.leastsquaresalgorithms.approximationservice.dto.ChosenMethodDto;
+import pl.least_squares_algorithms.core.LeastSquaresMethod;
+import pl.least_squares_algorithms.core.dto.ChosenMethodDto;
 
 import java.util.Arrays;
 import java.util.List;

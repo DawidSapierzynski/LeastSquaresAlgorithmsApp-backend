@@ -3,7 +3,8 @@ package pl.leastsquaresalgorithms.approximationservice.core.function;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.leastsquaresalgorithms.approximationservice.dto.PointXY;
+import pl.least_squares_algorithms.core.PointXY;
+import pl.least_squares_algorithms.core.function.LinearDomainMapping;
 
 import java.util.ArrayList;
 import java.util.List;

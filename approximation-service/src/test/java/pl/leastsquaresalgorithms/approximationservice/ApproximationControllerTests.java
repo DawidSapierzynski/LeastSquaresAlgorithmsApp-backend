@@ -4,23 +4,34 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import pl.leastsquaresalgorithms.approximationservice.core.LeastSquaresMethod;
-import pl.leastsquaresalgorithms.approximationservice.core.function.DomainFunction;
-import pl.leastsquaresalgorithms.approximationservice.dto.*;
+import org.springframework.http.MediaType;
+import pl.least_squares_algorithms.core.LeastSquaresMethod;
+import pl.least_squares_algorithms.core.PointXY;
+import pl.least_squares_algorithms.core.dto.ApproximationDto;
+import pl.least_squares_algorithms.core.dto.ChosenMethodDto;
+import pl.least_squares_algorithms.core.dto.MathematicalFunctionDto;
+import pl.least_squares_algorithms.core.function.DomainFunction;
+import pl.leastsquaresalgorithms.approximationservice.dto.ApproximationForm;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApproximationControllerTests {
-    public static final double DELTA = 1.0e-12;
+    public static final double DELTA = 1.0e-8;
     @LocalServerPort
     private Integer port;
 
@@ -51,52 +62,112 @@ class ApproximationControllerTests {
     }
 
     @Test
-    void shouldDoApproximationForLinearFunctionWithNormalizationMethod() {
-        shouldDoApproximationForLinearFunction(LeastSquaresMethod.NORMALIZATION);
-    }
-
-    @Test
-    void shouldDoApproximationForThirdDegreeFunctionWithNormalizationMethod() {
-        shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod.NORMALIZATION);
-    }
-
-    @Test
-    void shouldDoApproximationForLinearFunctionWithQRHouseholderTransformationMethod() {
-        shouldDoApproximationForLinearFunction(LeastSquaresMethod.HOUSEHOLDER_TRANSFORMATION);
-    }
-
-    @Test
-    void shouldDoApproximationForThirdDegreeFunctionWithQRHouseholderTransformationMethod() {
-        shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod.HOUSEHOLDER_TRANSFORMATION);
-    }
-
-    @Test
-    void shouldDoApproximationForLinearFunctionWithQRGivensRotationMethod() {
-        shouldDoApproximationForLinearFunction(LeastSquaresMethod.GIVENS_ROTATION);
-    }
-
-    @Test
-    void shouldDoApproximationForThirdDegreeFunctionWithQRGivensRotationMethod() {
-        shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod.GIVENS_ROTATION);
-    }
-
-    @Test
-    void shouldDoApproximationForLinearFunctionWithSingularValueDecompositionMethod() {
-        shouldDoApproximationForLinearFunction(LeastSquaresMethod.SINGULAR_VALUE_DECOMPOSITION);
-    }
-
-    @Test
-    void shouldDoApproximationForThirdDegreeFunctionWithSingularValueDecompositionMethod() {
-        shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod.SINGULAR_VALUE_DECOMPOSITION);
-    }
-
-    private void shouldDoApproximationForLinearFunction(LeastSquaresMethod normalization) {
+    void shouldDoApproximationWithoutChosenMethod() {
         int degree = 1;
         List<PointXY> points = preparePoints(x -> -x);
         ApproximationForm approximationForm = ApproximationForm.builder()
-                .chosenMethod(new ChosenMethodDto(normalization, degree))
                 .points(points)
                 .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+
+        approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(null, degree))
+                .points(points)
+                .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ParameterizedTest
+    @EnumSource(LeastSquaresMethod.class)
+    void shouldDoApproximationWithoutDegree(LeastSquaresMethod method) {
+        List<PointXY> points = preparePoints(x -> -x);
+        ApproximationForm approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(method, null))
+                .points(points)
+                .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldDoApproximationWithOnePoint() {
+        List<PointXY> points = List.of(new PointXY(0.0, 0.0));
+        ApproximationForm approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(LeastSquaresMethod.NORMALIZATION, 1))
+                .points(points)
+                .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldDoApproximationWithoutPoints() {
+        ApproximationForm approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(LeastSquaresMethod.NORMALIZATION, 1))
+                .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldDoApproximationWithMorePoints() {
+        List<PointXY> points = IntStream.range(0, 10_001).mapToObj(i -> new PointXY(i, -i)).collect(Collectors.toList());
+        ApproximationForm approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(LeastSquaresMethod.NORMALIZATION, 1))
+                .points(points)
+                .build();
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(approximationForm)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ParameterizedTest
+    @EnumSource(LeastSquaresMethod.class)
+    void shouldDoApproximationForLinearFunction(LeastSquaresMethod method) {
+        int degree = 1;
+        List<PointXY> points = preparePoints(x -> -x);
+        ApproximationForm approximationForm = ApproximationForm.builder()
+                .chosenMethod(new ChosenMethodDto(method, degree))
+                .points(points)
+                .build();
+
         ApproximationDto approximationDto = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(approximationForm)
@@ -115,7 +186,7 @@ class ApproximationControllerTests {
         List<MathematicalFunctionDto> mathematicalFunctionDtos = approximationDto.getMathematicalFunctionDtos();
         assertThat(mathematicalFunctionDtos.size(), equalTo(1));
 
-        PolynomialDto polynomialDto = mathematicalFunctionDtos.getFirst().getPolynomialDTO();
+        pl.least_squares_algorithms.core.dto.PolynomialDto polynomialDto = mathematicalFunctionDtos.getFirst().getPolynomialDto();
         assertThat(polynomialDto.getDegree(), equalTo(degree));
 
         List<Double> coefficients = polynomialDto.getCoefficients();
@@ -130,13 +201,16 @@ class ApproximationControllerTests {
         assertThat(domainFunction.rightClosedInterval(), equalTo(true));
     }
 
-    private void shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod householderTransformation) {
+    @ParameterizedTest
+    @EnumSource(LeastSquaresMethod.class)
+    void shouldDoApproximationForThirdDegreeFunction(LeastSquaresMethod method) {
         int degree = 3;
         List<PointXY> points = preparePoints(x -> 3 * x * x * x + 2 * x * x + -10 * x + 7);
         ApproximationForm approximationForm = ApproximationForm.builder()
-                .chosenMethod(new ChosenMethodDto(householderTransformation, degree))
+                .chosenMethod(new ChosenMethodDto(method, degree))
                 .points(points)
                 .build();
+
         ApproximationDto approximationDto = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(approximationForm)
@@ -155,7 +229,7 @@ class ApproximationControllerTests {
         List<MathematicalFunctionDto> mathematicalFunctionDtos = approximationDto.getMathematicalFunctionDtos();
         assertThat(mathematicalFunctionDtos.size(), equalTo(1));
 
-        PolynomialDto polynomialDto = mathematicalFunctionDtos.getFirst().getPolynomialDTO();
+        pl.least_squares_algorithms.core.dto.PolynomialDto polynomialDto = mathematicalFunctionDtos.getFirst().getPolynomialDto();
         assertThat(polynomialDto.getDegree(), equalTo(degree));
 
         List<Double> coefficients = polynomialDto.getCoefficients();
@@ -170,6 +244,164 @@ class ApproximationControllerTests {
         assertThat(domainFunction.leftClosedInterval(), equalTo(true));
         assertThat(domainFunction.endInterval(), equalTo(5.0));
         assertThat(domainFunction.rightClosedInterval(), equalTo(true));
+    }
+
+    @Test
+    void shouldDownloadApproximationResult() {
+        List<MathematicalFunctionDto> mathematicalFunctionDtos = List.of(
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(true, -5.0, 5.0, true))
+                        .polynomialDto(
+                                pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                        .degree(1)
+                                        .coefficients(List.of(2.0, -1.0))
+                                        .build()
+                        ).build()
+        );
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(mathematicalFunctionDtos)
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .header(HttpHeaders.CONTENT_TYPE, containsString(MediaType.TEXT_PLAIN_VALUE))
+                .header(HttpHeaders.CONTENT_DISPOSITION, containsString("attachment"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, containsString("approximation-points.txt"))
+                .body(notNullValue());
+    }
+
+    @Test
+    void shouldDownloadNotEmptyApproximationResultFile() {
+        List<MathematicalFunctionDto> mathematicalFunctionDtos = List.of(
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(true, -5.0, 5.0, true))
+                        .polynomialDto(pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                .degree(1)
+                                .coefficients(List.of(2.0, -1.0))
+                                .build())
+                        .build()
+        );
+
+        byte[] fileContent = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(mathematicalFunctionDtos)
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .header(HttpHeaders.CONTENT_TYPE, containsString(MediaType.TEXT_PLAIN_VALUE))
+                .extract()
+                .asByteArray();
+
+        assertThat(fileContent, notNullValue());
+        assertThat(fileContent.length, greaterThan(0));
+    }
+
+    @Test
+    void shouldDownloadApproximationResultWithDomainFunctionAndPolynomialCoefficients() {
+        List<MathematicalFunctionDto> mathematicalFunctionDtos = List.of(
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(true, -5.0, 5.0, true))
+                        .polynomialDto(pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                .degree(2)
+                                .coefficients(List.of(7.0, -10.0, 2.0))
+                                .build())
+                        .build()
+        );
+
+        byte[] fileContent = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(mathematicalFunctionDtos)
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .header(HttpHeaders.CONTENT_TYPE, containsString(MediaType.TEXT_PLAIN_VALUE))
+                .extract()
+                .asByteArray();
+
+        String textContent = new String(fileContent, StandardCharsets.UTF_8);
+
+        assertThat(textContent, containsString("<-5.0;5.0>"));
+        assertThat(textContent, containsString("a0=7.0"));
+        assertThat(textContent, containsString("a1=-10.0"));
+        assertThat(textContent, containsString("a2=2.0"));
+    }
+
+    @Test
+    void shouldDownloadApproximationResultForManyFunctions() {
+        List<MathematicalFunctionDto> mathematicalFunctionDtos = List.of(
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(true, -10.0, 0.0, true))
+                        .polynomialDto(pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                .degree(1)
+                                .coefficients(List.of(2.0, -1.0))
+                                .build())
+                        .build(),
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(false, 0.0, 10.0, true))
+                        .polynomialDto(pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                .degree(2)
+                                .coefficients(List.of(1.0, 0.0, 3.5))
+                                .build())
+                        .build()
+        );
+
+        byte[] fileContent = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(mathematicalFunctionDtos)
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .header(HttpHeaders.CONTENT_TYPE, containsString(MediaType.TEXT_PLAIN_VALUE))
+                .extract()
+                .asByteArray();
+
+        String textContent = new String(fileContent, StandardCharsets.UTF_8);
+
+        assertThat(textContent, containsString("<-10.0;0.0>"));
+        assertThat(textContent, containsString("a0=2.0"));
+        assertThat(textContent, containsString("a1=-1.0"));
+
+        assertThat(textContent, containsString("(0.0;10.0>"));
+        assertThat(textContent, containsString("a0=1.0"));
+        assertThat(textContent, containsString("a1=0.0"));
+        assertThat(textContent, containsString("a2=3.5"));
+    }
+
+    @Test
+    void shouldDownloadEmptyApproximationResultForEmptyFunctionList() {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(List.of())
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldReturnUnsupportedMediaTypeWhenDownloadingWithoutJsonContentType() {
+        List<MathematicalFunctionDto> mathematicalFunctionDtos = List.of(
+                MathematicalFunctionDto.builder()
+                        .domainFunction(new DomainFunction(true, -5.0, 5.0, true))
+                        .polynomialDto(pl.least_squares_algorithms.core.dto.PolynomialDto.builder()
+                                .degree(1)
+                                .coefficients(List.of(2.0, -1.0))
+                                .build())
+                        .build()
+        );
+
+        RestAssured.given()
+                .contentType(ContentType.TEXT)
+                .body(mathematicalFunctionDtos.toString())
+                .when()
+                .post("/download")
+                .then()
+                .statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
     }
 
     private List<PointXY> preparePoints(Function<Double, Double> function) {

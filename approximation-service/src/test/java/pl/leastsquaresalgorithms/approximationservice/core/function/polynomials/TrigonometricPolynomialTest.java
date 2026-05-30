@@ -3,6 +3,7 @@ package pl.leastsquaresalgorithms.approximationservice.core.function.polynomials
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.least_squares_algorithms.core.function.polynomials.TrigonometricPolynomial;
 
 import java.util.List;
 

@@ -3,6 +3,7 @@ package pl.leastsquaresalgorithms.dataseries.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import pl.least_squares_algorithms.core.PointXY;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;

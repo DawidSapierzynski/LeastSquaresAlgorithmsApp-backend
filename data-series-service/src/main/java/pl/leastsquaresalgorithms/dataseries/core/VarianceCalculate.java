@@ -2,7 +2,7 @@ package pl.leastsquaresalgorithms.dataseries.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
+import pl.least_squares_algorithms.core.PointXY;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 
 import java.util.List;

@@ -1,44 +1,49 @@
 package pl.leastsquaresalgorithms.dataseries.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.least_squares_algorithms.core.DistanceX;
+import pl.least_squares_algorithms.core.WeightDistribution;
 import pl.leastsquaresalgorithms.dataseries.configuration.exception.ForbiddenException;
 import pl.leastsquaresalgorithms.dataseries.configuration.exception.ResourceNotFoundException;
 import pl.leastsquaresalgorithms.dataseries.configuration.exception.SizeException;
 import pl.leastsquaresalgorithms.dataseries.dto.DataSeriesFileDto;
+import pl.leastsquaresalgorithms.dataseries.dto.GenerateDataSeriesForm;
 import pl.leastsquaresalgorithms.dataseries.dto.ResponseMessage;
 import pl.leastsquaresalgorithms.dataseries.mapper.DataSeriesFileMapper;
 import pl.leastsquaresalgorithms.dataseries.model.DataSeriesFileEntity;
 import pl.leastsquaresalgorithms.dataseries.service.DataSeriesFileService;
+import pl.leastsquaresalgorithms.dataseries.service.DataSeriesGenerator;
 import pl.leastsquaresalgorithms.dataseries.service.StorageService;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/data-series-file")
+@RequiredArgsConstructor
 public class DataSeriesFileController {
-    private final Logger logger = LoggerFactory.getLogger(DataSeriesFileController.class);
     private final StorageService storageService;
     private final DataSeriesFileService dataSeriesFileService;
     //    private final UserService userService;
     private final DataSeriesFileMapper dataSeriesFileMapper;
+    private final DataSeriesGenerator dataSeriesGenerator;
 
-    public DataSeriesFileController(StorageService storageService, DataSeriesFileService dataSeriesFileService, DataSeriesFileMapper dataSeriesFileMapper) {
-        this.storageService = storageService;
-        this.dataSeriesFileService = dataSeriesFileService;
-        this.dataSeriesFileMapper = dataSeriesFileMapper;
-    }
 
     @GetMapping
     public ResponseEntity<List<DataSeriesFileDto>> getAll() {
 //        UserEntity userEntity = userService.getLoggedUser();
         List<DataSeriesFileEntity> dataSeriesFileEntities = dataSeriesFileService.findAll();
         List<DataSeriesFileDto> dataSeriesFileDtos = dataSeriesFileMapper.buildDataSeriesFileDTOs(dataSeriesFileEntities);
-        logger.debug("Getting all (for user) the files successfully completed. Size: {}", dataSeriesFileDtos.size());
+        log.debug("Getting all (for user) the files successfully completed. Size: {}", dataSeriesFileDtos.size());
         return ResponseEntity.ok(dataSeriesFileDtos);
     }
 
@@ -48,7 +53,7 @@ public class DataSeriesFileController {
         DataSeriesFileEntity dataSeriesFileEntity = dataSeriesFileService.findByIdWithPoints(dataSeriesFileId)
                 .orElseThrow(() -> new ResourceNotFoundException("DataSeriesFileEntity not found for this id: " + dataSeriesFileId));
         DataSeriesFileDto dataSeriesFileDTO = dataSeriesFileMapper.buildDataSeriesFileDTO(dataSeriesFileEntity);
-        logger.trace("Getting file successfully completed. Size: {}", dataSeriesFileDTO);
+        log.trace("Getting file successfully completed. Size: {}", dataSeriesFileDTO);
         return ResponseEntity.ok(dataSeriesFileDTO);
     }
 
@@ -61,7 +66,7 @@ public class DataSeriesFileController {
         dataSeriesFileEntity = dataSeriesFileService.save(dataSeriesFileEntity);
         storageService.store(dataSeriesFile, dataSeriesFileEntity.getDataSeriesFileId() + DataSeriesFileService.FILE_EXTENSION);
         DataSeriesFileDto dataSeriesFileDTO = dataSeriesFileMapper.buildDataSeriesFileDTO(dataSeriesFileEntity);
-        logger.debug("The file was successfully added.");
+        log.debug("The file was successfully added.");
         return dataSeriesFileDTO;
     }
 
@@ -77,7 +82,20 @@ public class DataSeriesFileController {
 //        }
         this.dataSeriesFileService.delete(dataSeriesFile);
         this.storageService.deleteFile(dataSeriesFile.getDataSeriesFileId() + DataSeriesFileService.FILE_EXTENSION);
-        logger.debug("Deleted data series file with id: {}", dataSeriesFileId);
+        log.debug("Deleted data series file with id: {}", dataSeriesFileId);
         return new ResponseMessage("Deleted data series file with id: " + dataSeriesFileId);
+    }
+
+    @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<InputStreamResource> generateDataSeries(@RequestBody GenerateDataSeriesForm dataSeriesForm) {
+        WeightDistribution weightDistribution = WeightDistribution.valueOf(dataSeriesForm.getWeightDistribution().toUpperCase());
+        DistanceX distanceX = DistanceX.valueOf(dataSeriesForm.getDistanceX().toUpperCase());
+        byte[] text = dataSeriesGenerator.generateDataSeries(distanceX, weightDistribution, dataSeriesForm.getMathematicalFunctionDTO(), dataSeriesForm.getNumberPoints(), dataSeriesForm.getNoise());
+        log.debug("Generating data series completed successfully.");
+        ContentDisposition disposition = ContentDisposition.attachment().filename("points.txt").build();
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .headers(httpHeaders -> httpHeaders.setContentDisposition(disposition))
+                .body(new InputStreamResource(new ByteArrayInputStream(text)));
     }
 }

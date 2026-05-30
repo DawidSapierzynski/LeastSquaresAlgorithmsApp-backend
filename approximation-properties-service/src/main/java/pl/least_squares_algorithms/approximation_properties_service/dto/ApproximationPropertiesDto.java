@@ -1,0 +1,19 @@
+package pl.least_squares_algorithms.approximation_properties_service.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+
+@Getter
+@Setter
+@Builder
+public class ApproximationPropertiesDto {
+    private Long id;
+    private Long userId;
+    private DataSeriesFileDto dataSeriesFile;
+    private int degree;
+    private Timestamp dateCreate;
+    private boolean deleted;
+}

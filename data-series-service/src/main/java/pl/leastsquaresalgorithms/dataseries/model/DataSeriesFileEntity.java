@@ -2,9 +2,8 @@ package pl.leastsquaresalgorithms.dataseries.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
+import pl.least_squares_algorithms.core.PointXY;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 

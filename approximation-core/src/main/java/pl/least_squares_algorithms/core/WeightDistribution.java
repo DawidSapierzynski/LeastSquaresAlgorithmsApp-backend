@@ -1,0 +1,23 @@
+package pl.least_squares_algorithms.core;
+
+import lombok.Getter;
+
+import java.util.function.BiFunction;
+
+public enum WeightDistribution {
+    NONE("none", (a, b) -> 1L),
+    NORMAL("normal", (a, b) -> Math.abs(Distribution.normalRound(a, b)));
+
+    @Getter
+    private final String distributionName;
+    private final BiFunction<Double, Double, Long> function;
+
+    WeightDistribution(String distributionName, BiFunction<Double, Double, Long> function) {
+        this.distributionName = distributionName;
+        this.function = function;
+    }
+
+    public double applyValue(double a, double b) {
+        return this.function.apply(a, b);
+    }
+}

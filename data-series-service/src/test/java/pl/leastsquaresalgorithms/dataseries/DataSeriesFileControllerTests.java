@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.least_squares_algorithms.core.PointXY;
 import pl.leastsquaresalgorithms.dataseries.dto.DataSeriesFileDto;
-import pl.leastsquaresalgorithms.dataseries.dto.PointXY;
 import pl.leastsquaresalgorithms.dataseries.repository.DataSeriesFileRepository;
 
 import java.nio.charset.StandardCharsets;

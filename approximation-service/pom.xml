@@ -7,8 +7,8 @@
         <artifactId>least-squares-algorithms</artifactId>
         <version>1.0.0</version>
     </parent>
+
     <artifactId>approximation-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>approximation-service</name>
     <description>approximation-service</description>
 
@@ -22,14 +22,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>gov.nist.math</groupId>
-            <artifactId>jama</artifactId>
-            <version>${jama.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ejml</groupId>
-            <artifactId>ejml-all</artifactId>
-            <version>${ejml-all.version}</version>
+            <groupId>pl.least-squares-algorithms</groupId>
+            <artifactId>approximation-core</artifactId>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

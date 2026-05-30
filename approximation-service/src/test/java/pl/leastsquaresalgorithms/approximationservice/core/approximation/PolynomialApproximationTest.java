@@ -5,10 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.leastsquaresalgorithms.approximationservice.core.LeastSquaresMethod;
-import pl.leastsquaresalgorithms.approximationservice.core.function.polynomials.AlgebraicPolynomial;
-import pl.leastsquaresalgorithms.approximationservice.core.function.polynomials.Polynomial;
-import pl.leastsquaresalgorithms.approximationservice.dto.PointXY;
+import pl.least_squares_algorithms.core.LeastSquaresMethod;
+import pl.least_squares_algorithms.core.PointXY;
+import pl.least_squares_algorithms.core.approximation.PolynomialApproximation;
+import pl.least_squares_algorithms.core.function.polynomials.AlgebraicPolynomial;
+import pl.least_squares_algorithms.core.function.polynomials.Polynomial;
 
 import java.util.ArrayList;
 import java.util.List;
