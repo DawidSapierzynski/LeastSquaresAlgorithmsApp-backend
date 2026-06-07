@@ -8,8 +8,8 @@
     </parent>
 
     <artifactId>approximation-core</artifactId>
-    <name>approximation-service</name>
-    <description>approximation-service</description>
+    <name>approximation-core</name>
+    <description>approximation-core</description>
     <packaging>jar</packaging>
 
     <properties>
@@ -19,14 +19,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>gov.nist.math</groupId>
             <artifactId>jama</artifactId>
-            <version>${jama.version}</version>
         </dependency>
         <!--        <dependency>
                     <groupId>org.ejml</groupId>
@@ -34,5 +37,12 @@
                     <version>${ejml-all.version}</version>
                     <scope>compile</scope>
                 </dependency>-->
+
+        <!--TEST-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

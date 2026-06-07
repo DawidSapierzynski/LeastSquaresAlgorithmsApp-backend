@@ -1,0 +1,133 @@
+package pl.least_squares_algorithms.data_series_service.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pl.least_squares_algorithms.data_series_service.configuration.FileStorageProperties;
+import pl.least_squares_algorithms.data_series_service.configuration.exception.SizeException;
+import pl.least_squares_algorithms.data_series_service.core.ReadSeriesDates;
+import pl.least_squares_algorithms.data_series_service.core.ReadSeriesDatesFromFile;
+import pl.least_squares_algorithms.data_series_service.core.ReadSeriesDatesFromMultipartFile;
+import pl.least_squares_algorithms.data_series_service.core.VarianceCalculate;
+import pl.least_squares_algorithms.data_series_service.model.DataSeriesFileEntity;
+import pl.least_squares_algorithms.data_series_service.repository.DataSeriesFileRepository;
+
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+@Service
+public class DataSeriesFileService {
+    public static final String FILE_EXTENSION = ".csv";
+    private static final int MAX_NUMBER_POINTS = 10000;
+    private static final int MIN_NUMBER_POINTS = 2;
+    private static final Logger logger = LoggerFactory.getLogger(DataSeriesFileService.class);
+
+    private final ExecutorService threadPool;
+    private final FileStorageProperties fileStorageProperties;
+    private final DataSeriesFileRepository dataSeriesFileRepository;
+//    private final ApproximationPropertiesService approximationPropertiesService;
+
+    public DataSeriesFileService(@Value("${number.threads}") int nThreads, FileStorageProperties fileStorageProperties, DataSeriesFileRepository dataSeriesFileRepository) {
+        this.dataSeriesFileRepository = dataSeriesFileRepository;
+        this.threadPool = Executors.newFixedThreadPool(nThreads);
+        this.fileStorageProperties = fileStorageProperties;
+    }
+
+    public DataSeriesFileEntity buildEntity(MultipartFile dataSeriesFile) {
+        DataSeriesFileEntity dataSeriesFileEntity = new DataSeriesFileEntity();
+        dataSeriesFileEntity.setDateSent(new Timestamp(System.currentTimeMillis()));
+        dataSeriesFileEntity.setDeleted(Boolean.FALSE);
+        dataSeriesFileEntity.setName(dataSeriesFile.getOriginalFilename());
+        dataSeriesFileEntity.setHashName(UUID.randomUUID().toString());
+        dataSeriesFileEntity.setUserId(1L);
+        return dataSeriesFileEntity;
+    }
+
+    public void readFile(Long dateSeriesFileId, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
+        List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromFile(dateSeriesFileId.toString() + DataSeriesFileService.FILE_EXTENSION, dataSeriesFileEntity, fileStorageProperties)));
+        try {
+            List<Future<Object>> futures = this.threadPool.invokeAll(callables);
+            logger.debug("ReadSeriesDatesFromFile - isDone: {}", futures.getFirst().isDone());
+            if (dataSeriesFileEntity.getPoints().size() < MIN_NUMBER_POINTS) {
+                throw new SizeException("Data series is empty or the file has been deleted.");
+            }
+        } catch (InterruptedException e) {
+            logger.error("{}", e.getMessage());
+        }
+    }
+
+    public void readMultipartFile(MultipartFile dataSeriesMultipartFile, DataSeriesFileEntity dataSeriesFileEntity) throws SizeException {
+        List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new ReadSeriesDatesFromMultipartFile(dataSeriesFileEntity, dataSeriesMultipartFile)));
+        try {
+            List<Future<Object>> futures = this.threadPool.invokeAll(callables);
+            logger.debug("ReadSeriesDatesFromMultipartFile - isDone: {}", futures.getFirst().isDone());
+            if (!ReadSeriesDates.checkPoints(dataSeriesFileEntity.getPoints())) {
+                throw new SizeException("The series contains duplicate x");
+            }
+        } catch (InterruptedException e) {
+            logger.error("{}", e.getMessage());
+        }
+    }
+
+    private void checkSize(int size) throws SizeException {
+        if (size < MIN_NUMBER_POINTS) {
+            throw new SizeException("The number of points is less than " + MIN_NUMBER_POINTS);
+        } else if (size > MAX_NUMBER_POINTS) {
+            throw new SizeException("The number of points is greater than " + MAX_NUMBER_POINTS);
+        }
+    }
+
+    public void propertiesCalculate(DataSeriesFileEntity dataSeriesFile) throws SizeException {
+        checkSize(dataSeriesFile.getSize());
+        List<Callable<Object>> callables = Collections.singletonList(Executors.callable(new VarianceCalculate(dataSeriesFile)));
+        try {
+            List<Future<Object>> futures = this.threadPool.invokeAll(callables);
+            logger.debug("VarianceCalculate - isDone: {}", futures.getFirst().isDone());
+        } catch (InterruptedException e) {
+            logger.error("{}", e.getMessage());
+        }
+    }
+
+    public Optional<DataSeriesFileEntity> findById(Long id) {
+        return dataSeriesFileRepository.findById(id);
+    }
+
+    public Optional<DataSeriesFileEntity> findByIdWithPoints(Long id) {
+        Optional<DataSeriesFileEntity> dataSeriesFileOptional = dataSeriesFileRepository.findById(id);
+        dataSeriesFileOptional.ifPresent(dataSeriesFileEntity -> {
+            try {
+                this.readFile(dataSeriesFileEntity.getDataSeriesFileId(), dataSeriesFileEntity);
+            } catch (SizeException e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
+        return dataSeriesFileOptional;
+    }
+
+    public DataSeriesFileEntity save(DataSeriesFileEntity dataSeriesFileEntity) {
+        return dataSeriesFileRepository.save(dataSeriesFileEntity);
+    }
+
+    public void delete(DataSeriesFileEntity dataSeriesFileEntity) {
+        dataSeriesFileEntity.setDeleted(Boolean.TRUE);
+//        approximationPropertiesService.delete(dataSeriesFileEntity.getApproximationProperties());
+        save(dataSeriesFileEntity);
+    }
+
+    public List<DataSeriesFileEntity> findAll() {
+        return dataSeriesFileRepository.findAll();
+    }
+
+    public List<DataSeriesFileEntity> findByUserAndDeleted(Long userId, Boolean deleted) {
+        return dataSeriesFileRepository.findByUserIdAndDeleted(userId, deleted);
+    }
+}

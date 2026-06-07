@@ -1,0 +1,46 @@
+package pl.least_squares_algorithms.user_service.mapper;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import pl.least_squares_algorithms.user_service.dto.RoleUserDto;
+import pl.least_squares_algorithms.user_service.model.RoleUserEntity;
+import pl.least_squares_algorithms.user_service.service.RoleUserService;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class RoleUserMapper {
+    private final RoleUserService roleUserService;
+
+    public List<RoleUserDto> buildRoleUserDTOs(Collection<RoleUserEntity> roleUserEntities) {
+        return roleUserEntities.stream()
+                .map(this::buildRoleUserDTOs)
+                .collect(Collectors.toList());
+    }
+
+    public RoleUserDto buildRoleUserDTOs(RoleUserEntity roleUserEntity) {
+        return RoleUserDto.builder()
+                .id(roleUserEntity.getRoleUserId())
+                .code(roleUserEntity.getCode())
+                .name(roleUserEntity.getName())
+                .build();
+    }
+
+    public List<RoleUserEntity> mapRoleUserEntities(Collection<RoleUserDto> roleUserDtos) {
+        List<RoleUserEntity> roleUserEntities = new ArrayList<>();
+        for (RoleUserDto role : roleUserDtos) {
+            Optional<RoleUserEntity> roleUserEntity = findRoleUserEntity(role);
+            roleUserEntity.ifPresent(roleUserEntities::add);
+        }
+        return roleUserEntities;
+    }
+
+    public Optional<RoleUserEntity> findRoleUserEntity(RoleUserDto roleUserDTO) {
+        return roleUserService.findById(roleUserDTO.getId());
+    }
+}
