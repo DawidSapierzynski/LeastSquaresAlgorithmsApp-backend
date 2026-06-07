@@ -1,5 +1,8 @@
 package pl.least_squares_algorithms.user_service.model;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRole {
     ADMIN("ADMIN"),
     USER("USER");
@@ -8,9 +11,5 @@ public enum UserRole {
 
     UserRole(String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return code;
     }
 }
